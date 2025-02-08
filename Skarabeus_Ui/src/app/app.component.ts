@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { IngredientListComponent } from './ingredient-list/ingredient-list.component';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,8 @@ import { IngredientListComponent } from './ingredient-list/ingredient-list.compo
 })
 export class AppComponent {
   title = 'Skarabeus_Ui';
+
+  ngOnInit(): void {
+    initFlowbite();
+  }
 }

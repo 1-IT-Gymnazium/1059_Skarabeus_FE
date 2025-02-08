@@ -1,0 +1,7 @@
+{
+    "files.autoSave": "onFocusChange",
+    "editor.fontFamily": "Consolas, 'Courier New', monospace",
+    "files.exclude": {
+        "**/*.spec.ts": true
+    }
+}

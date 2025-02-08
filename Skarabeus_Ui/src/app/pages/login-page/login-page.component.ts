@@ -22,6 +22,8 @@ export class LoginPageComponent {
 
   protected readonly router = inject(Router);
 
+  protected lastError$:any;
+
   protected formular = this.fb.group({
     email: new FormControl('', { nonNullable: true}),
     password: new FormControl('', { nonNullable: true})
@@ -32,10 +34,11 @@ export class LoginPageComponent {
 
     this.authService.login(data).subscribe({
       next: async () => {
+        this.lastError$ = null
           await this.router.navigate(['/']);
       },
       error: (error) => {
-        console.log(error);
+        this.lastError$ = error
       }
     });
   }

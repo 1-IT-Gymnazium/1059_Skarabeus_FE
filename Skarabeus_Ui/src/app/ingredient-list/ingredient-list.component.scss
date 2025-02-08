@@ -1,0 +1,11 @@
+.ingredient{
+    @apply border p-5 shadow mb-5 mx-10 w-48 h-28 flex flex-col rounded-lg
+}
+
+.ingredient>*{
+    @apply flex-1
+}
+
+.ingredient button{
+    @apply border pl-3 pr-3 rounded-md
+}

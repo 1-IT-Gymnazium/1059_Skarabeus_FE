@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, generate, Observable, ReplaySubject } from 'rxjs';
 import { IngredientDetail } from '../models/ingredient/ingredient-detail.interface';
-import * as jsonpatch from 'fast-json-patch';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { IngredientCreate } from '../models/ingredient/ingredient-create.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class IngredientService {
-  protected readonly baseUrl = "/api/v1/ingredient"
-    private ingredients = new BehaviorSubject<IngredientDetail[]>([]);
-    ingredients$ = this.ingredients.asObservable();
+export class DishService {
+  protected readonly baseUrl = "/api/v1/Dish"
+    private dishes = new BehaviorSubject<IngredientDetail[]>([]);
+    dishes$ = this.dishes.asObservable();
     
 
   constructor(private httpClient: HttpClient) {
@@ -31,7 +30,7 @@ export class IngredientService {
   UpdateIngredients(){
     const url = this.baseUrl;
     this.httpClient.get<IngredientDetail[]>(url)
-    .subscribe(x=>{console.log(x),this.ingredients.next(x)});
+    .subscribe(x=>{console.log(x),this.dishes.next(x)});
   }
 
   createIngredient(data:IngredientCreate):Observable<IngredientDetail>{

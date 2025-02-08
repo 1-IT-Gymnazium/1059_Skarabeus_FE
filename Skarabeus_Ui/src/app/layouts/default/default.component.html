@@ -18,13 +18,13 @@
       class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
     >
       @if(user){
-      <button
+        <button
         type="button"
+        
         class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
         id="user-menu-button"
         aria-expanded="false"
         data-dropdown-toggle="user-dropdown"
-        data-dropdown-placement="bottom"
       >
         <span class="sr-only">Open user menu</span>
         <img
@@ -40,10 +40,10 @@
       >
         <div class="px-4 py-3">
           <span class="block text-sm text-gray-900 dark:text-white"
-            >Bonnie Green</span
+            >{{user.userName}}</span
           >
           <span class="block text-sm text-gray-500 truncate dark:text-gray-400"
-            >example email address</span
+            >{{user.email}}</span
           >
         </div>
         <ul class="py-2" aria-labelledby="user-menu-button">
@@ -133,6 +133,14 @@
             class="block py-2 px-3 text-white rounded md:bg-transparent md:p-0 md:dark:text-blue-500"
             aria-current="page"
             >Item 3</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="block py-2 px-3 text-white rounded md:bg-transparent md:p-0 md:dark:text-blue-500"
+            aria-current="page"
+            >{{user.id}}</a
           >
         </li>
         } @else {
