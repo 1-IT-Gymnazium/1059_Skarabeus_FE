@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { IngredientListComponent } from './ingredient-list/ingredient-list.component';
+import { IngredientListComponent } from './components/ingredient-list/ingredient-list.component';
 import { initFlowbite } from 'flowbite';
 
 @Component({

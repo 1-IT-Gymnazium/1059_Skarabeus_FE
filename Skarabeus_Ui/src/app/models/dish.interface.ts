@@ -3,8 +3,8 @@ import { IngredientDetail } from "./ingredient/ingredient-detail.interface";
 export interface DishDetail {
     id: string;
     name: string;
-    description: number;
-    ingredients:IngredientDetail[]|undefined;
+    description: string;
+    ingredients:IngredientDishDetail[]|undefined;
 }
 
 export interface DishCreate {
@@ -12,3 +12,11 @@ export interface DishCreate {
     description:string;
 }
 
+export interface IngredientDishDetail {
+    ingredientId:string;
+    name: string;
+    amount:number;
+    price:number;
+
+    priceForAmount:number;
+}

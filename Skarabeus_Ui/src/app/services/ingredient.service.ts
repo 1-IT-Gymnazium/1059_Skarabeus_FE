@@ -31,12 +31,15 @@ export class IngredientService {
   UpdateIngredients(){
     const url = this.baseUrl;
     this.httpClient.get<IngredientDetail[]>(url)
-    .subscribe(x=>{console.log(x),this.ingredients.next(x)});
+    .subscribe(x=>{console.log(x),this.ingredients.next(x)})
   }
 
-  createIngredient(data:IngredientCreate):Observable<IngredientDetail>{
+  createIngredient(data:IngredientCreate):void{
     const url = this.baseUrl;
-    return this.httpClient.post<IngredientDetail>(url,data);
+    this.httpClient.post<IngredientDetail>(url,data).subscribe({
+      next: (response) => {this.UpdateIngredients(),console.log(response)},
+      error: (error) => console.error(error)
+    });
   }
   
   removeIngredient(id: string): void {

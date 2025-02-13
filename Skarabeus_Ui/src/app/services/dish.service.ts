@@ -1,48 +1,50 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, generate, Observable, ReplaySubject } from 'rxjs';
-import { IngredientDetail } from '../models/ingredient/ingredient-detail.interface';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { IngredientCreate } from '../models/ingredient/ingredient-create.interface';
+import { DishCreate, DishDetail } from '../models/dish.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DishService {
   protected readonly baseUrl = "/api/v1/Dish"
-    private dishes = new BehaviorSubject<IngredientDetail[]>([]);
+    private dishes = new BehaviorSubject<DishDetail[]>([]);
     dishes$ = this.dishes.asObservable();
     
 
   constructor(private httpClient: HttpClient) {
-    this.UpdateIngredients()
+    this.UpdateDishes()
    }
 
-   PatchIngredient(id:string|undefined,patch:Partial<IngredientCreate>) {
+   PatchDish(id:string|undefined,patch:Partial<DishCreate>) {
 
     const url = `${this.baseUrl}/${id}`;
     this.httpClient.patch(url,this.generatePatch(patch))
     .subscribe({
-      next: (response) => {this.UpdateIngredients()},
-      error: (error) => console.error('Delete failed:', error)
+      next: (response) => {this.UpdateDishes()},
+      error: (error) => console.error('Error:', error)
     })
   }
 
-  UpdateIngredients(){
+  UpdateDishes(){
     const url = this.baseUrl;
-    this.httpClient.get<IngredientDetail[]>(url)
+    this.httpClient.get<DishDetail[]>(url)
     .subscribe(x=>{console.log(x),this.dishes.next(x)});
   }
 
-  createIngredient(data:IngredientCreate):Observable<IngredientDetail>{
+  CreateDish(data:DishCreate):void{
     const url = this.baseUrl;
-    return this.httpClient.post<IngredientDetail>(url,data);
+    this.httpClient.post<DishDetail>(url,data).subscribe({
+      next: (response) => {this.UpdateDishes(),console.log(response)},
+      error: (error) => console.error(error)
+    });
   }
   
-  removeIngredient(id: string): void {
+  RemoveDish(id: string): void {
     const url = `${this.baseUrl}/${id}`;
     this.httpClient.delete(url).subscribe({
-      next: (response) => {this.UpdateIngredients(),console.log('Ingredient deleted:', response)},
-      error: (error) => console.error('Delete failed:', error)
+      next: (response) => {this.UpdateDishes(),console.log(response)},
+      error: (error) => console.error(error)
     });
   }
   

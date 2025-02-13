@@ -1,9 +1,9 @@
 import { AsyncPipe, CommonModule, NumberSymbol } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IngredientService } from '../services/ingredient.service';
-import { IngredientDetail } from '../models/ingredient/ingredient-detail.interface';
-import { IngredientCreate } from '../models/ingredient/ingredient-create.interface';
+import { IngredientService } from '../../services/ingredient.service';
+import { IngredientDetail } from '../../models/ingredient/ingredient-detail.interface';
+import { IngredientCreate } from '../../models/ingredient/ingredient-create.interface';
 import { Drawer } from 'flowbite';
 
 
@@ -20,28 +20,22 @@ import { Drawer } from 'flowbite';
   styleUrl: './ingredient-list.component.scss'
 })
 export class IngredientListComponent {
+
 protected fb:FormBuilder;
 protected ingredients$;
-$targetEl = document.getElementById('drawer-right-example');
+$targetEl = document.getElementById('drawer-ingredient');
 drawer:any;
 
-modalTitle: string = '';
+drawerMode = "Editing";
 modalName: string = '';
 modalPrice: number = 0;
 editingIng:IngredientDetail ={id:"",name:"",priceForUnit:0};
-
-
-//drawerElement = document.getElementById('drawer-right-example');
 
 constructor(formBuilder:FormBuilder,protected is: IngredientService) {
   this.fb = formBuilder;
   this.ingredients$ = this.is.ingredients$;
 
   this.initDraw()
-  /*
-  if (this.drawerElement) {
-    new Drawer(this.drawerElement);
-  }*/
 }
 
 ngOnInit(){
@@ -49,7 +43,7 @@ ngOnInit(){
 }
 
 initDraw(){
-  this.drawer =new Drawer(document.getElementById('drawer-right-example'), {
+  this.drawer =new Drawer(document.getElementById('drawer-ingredient'), {
     placement: 'right',
     backdrop: true,
     bodyScrolling: false,
@@ -67,7 +61,7 @@ initDraw(){
         console.log('drawer has been toggled');
     },
   }, {
-  id: 'drawer-right-example',
+  id: 'drawer-ingredient',
   override: true
   });
 }
@@ -83,11 +77,18 @@ removeIngredient(id:string):any{
 
 activeEditDrawer(ingredient:IngredientDetail){
   this.editingIng = ingredient;
-  this.openDrawer("Edit",ingredient.name,ingredient.priceForUnit)
+  this.drawerMode = "Editing"
+  this.openDrawer(ingredient.name,ingredient.priceForUnit)
+}
+  
+activeCreateDrawer(){
+  this.drawerMode = "Creating";
+  this.modalName = "";
+  this.modalPrice= 0;
+  this.drawer.show();
 }
 
-  openDrawer(title: string, name: string = '',price:number=0): void {
-    this.modalTitle = title;
+  openDrawer(name: string = '',price:number=0): void {
     this.modalName = name;
     this.modalPrice = price;
     this.drawer.show()
@@ -97,9 +98,14 @@ activeEditDrawer(ingredient:IngredientDetail){
     this.drawer.hide()
   }
 
-  saveChanges(): void {
+  update(): void {
     const ing:IngredientCreate = {name: this.modalName,priceforunit:this.modalPrice}
     this.is.PatchIngredient(this.editingIng.id,ing);
+    this.closeDrawer();
+  }
+  create(): void {
+    const ing:IngredientCreate = {name: this.modalName,priceforunit:this.modalPrice}
+    this.is.createIngredient(ing);
     this.closeDrawer();
   }
 }

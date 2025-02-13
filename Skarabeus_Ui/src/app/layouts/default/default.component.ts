@@ -2,6 +2,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { Dropdown } from 'flowbite';
  
 @Component({
   selector: 'app-default',
@@ -15,6 +16,7 @@ export class DefaultComponent {
 
   protected readonly authService = inject(AuthService);
 
+  drop!:Dropdown
   
   protected user$ = this.authService.userInfoModel$;
   
