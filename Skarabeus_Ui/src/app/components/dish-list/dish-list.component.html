@@ -12,7 +12,7 @@
         @if(normalizeString(dish.name).indexOf(normalizeString(search))!=-1){
           <section (click)="openEditModal(dish)" class="dish" >
             <h2 class="text-center">{{dish.name}}</h2>
-            <p>
+            <p class="whitespace-pre-wrap overflow-scroll text-wrap">
               {{dish.description}}
             </p>
           </section>
@@ -26,15 +26,40 @@
 
 @if (activeModal) {
   <div class="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center">
-    <div class="bg-white rounded-lg p-6 w-4/5 h-4/5 shadow-lg">
-      <h3 class="text-lg font-semibold text-gray-700 mb-4">{{modalMode}}</h3>
-
-<label class="block text-sm text-gray-600">Name</label>
-<input type="text" [(ngModel)]="dishName" class="w-full p-2 border rounded mb-3" />
-
-<label class="block text-sm text-gray-600">Description</label>
-<input type="text" [(ngModel)]="dishDescription" class="w-full p-2 border rounded mb-3" />
-
+    <div class="bg-white rounded-lg w-4/5 h-4/5 p-6 shadow-lg">
+      <h2 class="text-lg w-full text-center font-semibold text-gray-700 mb-4">{{modalMode}}</h2>
+      <div class="flex justify-around">
+        <div class="w-2/5">
+          <label class="block text-sm text-gray-600">Name</label>
+          <input type="text" [(ngModel)]="dishName" class="w-full p-2 border rounded mb-3" />
+        
+          <label class="block text-sm text-gray-600">Description</label>
+          <textarea type="textArea" [(ngModel)]="dishDescription" class="w-full max-h-80 h-80 p-2 border rounded mb-3" ></textarea>
+        </div>
+        <div class="w-3/5">
+          <div class="flex flex-wrap flex-1 justify-evenly overflow-y-scroll w-full h-full" >
+            @if(!((ingredients$ | async)?.length == 0)){
+              @for(ingredient of ingredients$|async; track ingredient){
+                <section class="ingredient">
+                  <h2 class="text-center">{{ingredient.name}} | {{ingredient.priceForUnit}}</h2>
+                  
+                    <button class="bg-blue-500">edit</button>
+                    <button class="bg-red-600" (click)="removeIngredient(ingredient.id)">delete</button>
+                  
+              </section>
+              }
+        }
+        @else {
+          Žádná data 😦
+        }
+          </div>
+        </div>
+      </div>
+      <div [ngSwitch]="modalMode" class="w-full flex justify-center modal-buttons">
+        <button *ngSwitchCase="'Editing'" (click)="update()" class="bg-teal-400">Save</button>
+        <button *ngSwitchCase="'Creating'" (click)="create()" class="bg-teal-400">Create</button>        
+        <button (click)="closeModal()" class="bg-red-700">Cancel</button>
+      </div>
     </div>
   </div>
 }

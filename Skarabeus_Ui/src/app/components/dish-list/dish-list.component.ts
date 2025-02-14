@@ -1,10 +1,11 @@
 import { DishCreate, DishDetail } from '../../models/dish.interface';
-import { DishService } from '../../services/dish.service';
 import { AsyncPipe, CommonModule, NumberSymbol } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Drawer } from 'flowbite';
 import { RouterLink } from '@angular/router';
+import { DishService } from '../../services/dish.service';
+import { IngredientService } from '../../services/ingredient.service';
 
 
 @Component({
@@ -14,7 +15,6 @@ import { RouterLink } from '@angular/router';
     CommonModule,
     AsyncPipe,
     FormsModule,
-    RouterLink,
     ReactiveFormsModule
   ],
   templateUrl: './dish-list.component.html',
@@ -22,7 +22,9 @@ import { RouterLink } from '@angular/router';
 })
 export class DishListComponent {
   protected fb:FormBuilder;
+  
   protected dishes$;
+  protected ingredients$;
 
   search:string = "";
 
@@ -36,13 +38,14 @@ export class DishListComponent {
 
   editingIng:DishDetail ={id:"",name:"",description:"",ingredients:undefined};
   
-  constructor(formBuilder:FormBuilder,protected service: DishService) {
+  constructor(formBuilder:FormBuilder,protected dishService: DishService,protected ingredientService:IngredientService) {
     this.fb = formBuilder;
-    this.dishes$ = this.service.dishes$;
-  
+    this.dishes$ = this.dishService.dishes$;
+    this.ingredients$ = ingredientService.ingredients$
   }
 
   closeModal(){
+    this.dishService.UpdateDishes();
     this.activeModal=false;
   }
   
@@ -50,6 +53,7 @@ export class DishListComponent {
     this.modalMode="Editing";
     this.dishName = dish.name;
     this.dishDescription = dish.description;
+    this.editingIng=dish;
     this.openModal()
   }
 
@@ -64,24 +68,24 @@ export class DishListComponent {
     this.activeModal = true
   }
   refreshIngredients(){
-    this.service.UpdateDishes()
+    this.dishService.UpdateDishes()
   }
   
   removeIngredient(id:string):any{
     console.log("aaaa"+id);
-    this.service.RemoveDish(id);
+    this.dishService.RemoveDish(id);
   }
   
  
   update(): void {
     const ing:DishCreate = {name: this.dishName,description : this.dishDescription}
-    this.service.PatchDish(this.editingIng.id,ing);
+    this.dishService.PatchDish(this.editingIng.id,ing);
     this.closeModal();
   }
   
   create(): void {
     const ing:DishCreate = {name: this.dishName,description : this.dishDescription}
-    this.service.CreateDish(ing);
+    this.dishService.CreateDish(ing);
     this.closeModal();
   }
   
