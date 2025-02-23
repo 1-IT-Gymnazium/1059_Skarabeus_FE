@@ -1,5 +1,3 @@
-import { IngredientDetail } from "./ingredient/ingredient-detail.interface";
-
 export interface DishDetail {
     id: string;
     name: string;
@@ -13,10 +11,21 @@ export interface DishCreate {
 }
 
 export interface IngredientDishDetail {
+    id:string,
     ingredientId:string;
     name: string;
     amount:number;
     price:number;
+    priceForUnit:number;
+}
 
-    priceForAmount:number;
+export interface DishAddIngredientModel{
+  dishId:string;
+  ingredientId:string;
+  amout:number;
+}
+
+export interface DishIngredientModel{
+  dishId:string;
+  ingredientId:string;
 }

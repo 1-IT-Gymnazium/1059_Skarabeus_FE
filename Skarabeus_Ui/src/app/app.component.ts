@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { IngredientListComponent } from './components/ingredient-list/ingredient-list.component';
 import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,IngredientListComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

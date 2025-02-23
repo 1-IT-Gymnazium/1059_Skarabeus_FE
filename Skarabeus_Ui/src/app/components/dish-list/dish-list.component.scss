@@ -3,7 +3,7 @@
     transition: transform 0.3s ease-in-out;
 }
 .dish>p{
-    @apply flex-1 break-words text-wrap overflow-hidden 
+    @apply flex-1 break-words text-wrap overflow-hidden
 }
 
 .dish button{
@@ -16,18 +16,40 @@
     transform: translateY(-0.5rem);
 }
 
-.modal-buttons>button{
-    @apply p-2 m-2 rounded-md
+.h_fit_modal{
+  height: 50%
 }
 
 .ingredient{
-    @apply border p-2 shadow mb-5 mx-10 w-full h-12 flex flex-row rounded-lg
+    @apply border p-2 shadow mb-5 mx-10 min-h-12 h-12 flex flex-row rounded-lg;
+    width: calc(100% - 5rem);
 }
 
-.ingredient>*{
-    @apply flex-1
+.ingredient:hover{
+  cursor: pointer;
+}
+
+.ingredient:hover .navigation{
+  display: flex;
+}
+
+.navigation{
+  display: none;
+  @apply items-center justify-center h-full p-1 bg-blue-500 w-fit
+}
+
+.ingredient:hover .price{
+  display: none;
+}
+
+.price{
+  display: block;
 }
 
 .ingredient button{
-    @apply border pl-3 pr-3 rounded-md
+    @apply border text-center rounded-md
+}
+.ingredient>
+h2,.ingredient>button,.ingredient>div{
+  @apply mx-2
 }

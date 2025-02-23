@@ -1,10 +1,9 @@
-import { PersonDetailModel } from "./person-detail-model.interface";
+import { SmallPersonDetailModel } from "../person.interface";
 
 export interface UserInfoModel {
     id: string;
     userName: string;
     email: string;
     phoneNummber: string;
-    person:PersonDetailModel;
+    person:SmallPersonDetailModel;
   }
-  
