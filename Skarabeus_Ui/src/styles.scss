@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 ::-webkit-scrollbar {
     width: 10px;
   }
@@ -23,6 +24,11 @@ input[type="number"]::-webkit-inner-spin-button {
   height: calc(100% - 6rem);
 }
 
+.h_100-4{
+  height: calc(100% - 4rem);
+}
+
+
 .h_100-2\.5{
   height: calc(100% - 2.5rem);
 }
@@ -44,3 +50,17 @@ input[type="number"]{
 }
 
 
+$primary-dark-blue: #1A3A5B;
+$primary-light-blue: #4A90E2;
+$primary-white: #FFFFFF;
+$primary-gray: #F2F2F2;
+
+$accent-orange: #F5A623;
+$accent-green: #7ED321;
+
+
+$scarab-dark-green: #2C5E2E;  
+$scarab-gold: #D4A537;        
+$sandstone-beige: #E5C99D;   
+$night-blue: #1C3D5A;         
+$light-parchment: #F8F5E4;    

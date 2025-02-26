@@ -6,6 +6,7 @@ import { NotFoundPageComponent } from './pages/errors/not-found-page/not-found-p
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { FoodPageComponent } from './pages/food-page/food-page.component';
 import { PersonsListComponent } from './components/persons-list/persons-list.component';
+import { PeoplePageComponent } from './pages/people-page/people-page.component';
 
 export const routes: Routes = [
     {
@@ -19,12 +20,12 @@ export const routes: Routes = [
           component:FoodPageComponent
         },
         {
-          path:"calendar",
+          path:"events",
           component:EventListComponent
         },
         {
-          path:"persons",
-          component:PersonsListComponent
+          path:"people",
+          component:PeoplePageComponent
         },
         {
           path: 'not-found',

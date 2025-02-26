@@ -1,19 +1,17 @@
 import { PersonStatus } from './../../models/person.interface';
 import { PersonService } from './../../services/person.service';
-import { Component, isStandalone } from '@angular/core';
+import { Component } from '@angular/core';
 import { PersonCreateModel, PersonDetailModel } from '../../models/person.interface';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
-import { combineLatest } from 'rxjs';
-import { PersonEditService } from '../../services/PersonEdit.service';
 
 @Component({
   selector: 'app-persons-list',
   standalone: true,
   imports: [
-      CommonModule,
-      AsyncPipe,
-      FormsModule,
+    CommonModule,
+    AsyncPipe,
+    FormsModule,
     ReactiveFormsModule
   ],
   templateUrl: './persons-list.component.html',
@@ -34,15 +32,11 @@ export class PersonsListComponent {
   editingPerson$:PersonDetailModel;
   editingPersonBase:PersonDetailModel ;
 
-  constructor(ps:PersonService,private personEditService:PersonEditService) {
+  constructor(ps:PersonService) {
     this.personService = ps
     this.editingPerson$ = {id:"",firstName:"",lastName:"",gender:false,active:false,status:PersonStatus.Other,deleted:false};
     this.editingPersonBase = JSON.parse(JSON.stringify(this.editingPerson$))
     this.persons$ = this.personService.persons$
-  }
-
-  ngOnInit() {
-    this.personEditService.editPersonId$.subscribe(x=>this.openEditModal(x!))
   }
 
   closeEditModal(){

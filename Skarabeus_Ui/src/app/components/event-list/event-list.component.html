@@ -1,0 +1,32 @@
+<div class="p-8 h-full">
+    <h1 class="text-xl">Events</h1>
+    <div class="flex flex-wrap">
+      <input
+        placeholder="search"
+        type="text"
+        [(ngModel)]="search"
+        class="w-1/2 h-8 p-2 my-4 mb-3 border rounded sm:w-1/4 md:w-1/5 xl:w-1/6"
+      />
+      @if(search!=""){
+        <button (click)="search = ''" class="ml-2 rounded-md">x</button>
+      }
+      <button (click)="openCreateModal()" class="w-8 h-8 my-4 ml-2 bg-blue-500 rounded-md">
+        <b>+</b>
+      </button>
+    </div>
+  
+    <div class="flex flex-wrap flex-1 overflow-y-scroll justify-evenly" style="height: calc(100% - 4rem);">
+      @if (events$ | async; as events) {
+        @for (event of events$ | async; track event) {
+          @if (normalizeString(event.name).indexOf(normalizeString(search)) != -1) {
+            <section (click)="openEditModal(event.id)" [class]="{'bg-slate-200' : ended(event.end)}" class="event" >
+              <h2 class="text-center">{{ event.name }}</h2>
+              <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ event.description }}</p>
+            </section>
+          }
+        }
+      }
+      @else {
+        Žádná data 😦
+      }
+    </div>

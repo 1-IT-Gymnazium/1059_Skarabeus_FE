@@ -12,10 +12,9 @@ import { Dropdown } from 'flowbite';
   styleUrl: './default.component.scss',
 })
 export class DefaultComponent {
-  protected readonly router = inject(Router);
-
-  protected readonly authService = inject(AuthService);
-
+  constructor(private authService:AuthService) {
+    
+  }
   drop!:Dropdown
   
   protected user$ = this.authService.userInfoModel$;

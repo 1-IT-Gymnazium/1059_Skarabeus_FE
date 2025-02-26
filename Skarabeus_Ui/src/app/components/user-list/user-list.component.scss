@@ -1,16 +1,16 @@
-.event{
+.user{
     @apply border p-5 shadow my-3 w-56 h-64 flex flex-col rounded-lg;
     transition: transform 0.3s ease-in-out;
   }
-  .event>p{
+  .user>p{
     @apply flex-1 break-words text-wrap overflow-hidden
   }
   
-  .event button{
+  .user button{
     @apply border pl-3 pr-3 rounded-md
   }
   
-  .event:hover{
+  .user:hover{
     cursor: pointer;
     box-shadow: 0 0.5rem 1rem rgba(95, 95, 95, 0.5);
     transform: translateY(-0.5rem);

@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PersonService {
   protected readonly baseUrl = "/api/v1/Person"
-    private persons = new BehaviorSubject<PersonDetailModel[]>([]);
-    persons$ = this.persons.asObservable();
+  private persons = new BehaviorSubject<PersonDetailModel[]>([]);
+  persons$ = this.persons.asObservable();
 
 
   constructor(private httpClient: HttpClient) {
