@@ -30,3 +30,122 @@
         Žádná data 😦
       }
     </div>
+
+    @if (activeCreateModal) {
+        <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+          <div class="w-5/6 p-6 pb-2 bg-white rounded-lg shadow-lg sm:w-3/6 md:w-2/6 h-fit">
+            <div class="flex flex-row">
+              <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Create Event</h2>
+              <button class="h-fit" (click)="closeCreateModal()">x</button>
+            </div>
+            <form #eventForm="ngForm" (ngSubmit)="checkForm(eventForm)" class="flex flex-col h-full inputs">
+              
+              <div class="flex flex-col flex-1 mx-1">
+                <label>Event Name</label>
+                <input
+                  minlength="3"
+                  class="rounded"
+                  type="text"
+                  name="name"
+                  [(ngModel)]="CreatingEvent.name"
+                  #name="ngModel"
+                  required>
+                  @if(name.invalid && name.touched){
+                    <p class="text-red-500">
+                      Event name must be at least 3 characters long.
+                    </p>
+                  }
+              </div>
+      
+              <div class="flex flex-col flex-1 mx-1">
+                <label>Description</label>
+                <input
+                  minlength="3"
+                  class="rounded"
+                  type="text"
+                  name="description"
+                  [(ngModel)]="CreatingEvent.description"
+                  #description="ngModel"
+                  required>
+                  @if(description.invalid && description.touched){
+                    <p class="text-red-500">
+                      Description must be at least 3 characters long.
+                    </p>
+                  }
+              </div>
+      
+              <div class="flex flex-col flex-1 mx-1">
+                <label>Place</label>
+                <input
+                  class="rounded"
+                  type="text"
+                  name="place"
+                  [(ngModel)]="CreatingEvent.place"
+                  #place="ngModel"
+                  required>
+                  @if(place.invalid && place.touched){
+                    <p class="text-red-500">
+                      Place is required.
+                    </p>
+                  }
+              </div>
+      
+              <div class="flex flex-col flex-1 mx-1">
+                <label>Responsible Person</label>
+                <select
+                  class="rounded"
+                  name="responsiblePersonId"
+                  [(ngModel)]="CreatingEvent.responsiblePersonId"
+                  required>
+                  <option value="" selected>none</option>
+                  @for(person of persons$ | async; track person){
+                    <option [value]="person.id">{{person.firstName}} {{person.lastName}}</option>
+                  }
+                </select>
+              </div>
+              <div class="flex flex-col justify-between md:flex-row">
+                <div class="flex flex-col flex-1 my-1 md:max-w-[50%] md:my-0 mx-1">
+                  <label>Start Date</label>
+                  <input
+                    class="rounded"
+                    type="date"
+                    name="start"
+                    [(ngModel)]="CreatingEvent.start"
+                    #start="ngModel"
+                    required>
+                  @if(start.invalid && start.touched){
+                    <p class="text-red-500">
+                      Start date is required.
+                    </p>
+                  }
+                </div>
+              
+                <div class="flex flex-col flex-1 my-1 md:max-w-[50%] md:my-0 mx-1">
+                  <label>End Date</label>
+                  <input
+                    class="rounded"
+                    type="date"
+                    name="end"
+                    [(ngModel)]="CreatingEvent.end"
+                    #end="ngModel"
+                    required>
+                  @if(end.invalid && end.touched){
+                    <p class="text-red-500">
+                      End date is required.
+                    </p>
+                  }
+                </div>
+              </div>
+      
+              <div class="flex justify-center m-2">
+                <button
+                  class="p-2 bg-teal-500 rounded-md"
+                  type="submit">
+                  Create Event
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      }
+      

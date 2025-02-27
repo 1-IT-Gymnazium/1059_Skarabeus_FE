@@ -112,13 +112,14 @@
             >
           </div>
           <div class="flex flex-col flex-1 mx-1">
-            <label>Identity of user</label>
+            <label [class]="userPerson.invalid && userPerson.touched ? 'text-red-600' : '' ">Identity of user</label>
             <select 
             class="rounded" 
-            name="person" 
+            #userPerson="ngModel"
+            name="personId"
             [(ngModel)]="creatingUser.personId"
             required>
-              <option value="" selected>none</option>
+              <option [ngValue]="null" disabled selected>none</option>
               @for(person of persons$ | async;track person){
                 <option [value]="person.id">{{person.firstName}}</option>
               }
@@ -166,24 +167,12 @@
                    [(ngModel)]="editingUser.email"
                    #email="ngModel"
                    required
+                   email
                    (blur)="onBlur('email', email.valid!)">
             @if (email.invalid && email.touched) {
               <span class="text-red-500">Invalid email</span>
             }
-          </div>
-  
-          <!-- Phone Number -->
-          <div>
-            <label>Phone Number</label>
-            <input type="tel" class="rounded"
-                   [(ngModel)]="editingUser.phoneNumber"
-                   #phone="ngModel"
-                   pattern="^[0-9]{9,15}$"
-                   (blur)="onBlur('phoneNumber', phone.valid!)">
-            @if (phone.invalid && phone.touched) {
-              <span class="text-red-500">Invalid phone</span>
-            }
-          </div>  
+          </div> 
           <div>
             <button (click)="openPersonEdit()">person</button>
           </div>

@@ -13,7 +13,7 @@ import { AsyncPipe } from '@angular/common';
 })
 export class PeoplePageComponent{
 
-  role$=this.authService.role$
+  protected user$ = this.authService.userInfoModel$;
 
   constructor(private authService:AuthService) { }
 }

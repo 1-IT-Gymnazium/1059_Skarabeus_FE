@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { UserCreate, UserDetail } from '../models/user.interface';
+import { UserCreate, UserDetail, UserPatch } from '../models/user.interface';
 import { PersonCreateModel } from '../models/person.interface';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class UserService {
     return this.httpClient.post(`${this.baseUrl}/CreateUser`,model)
    }
    
-  Patch(id:string,model:Partial<PersonCreateModel>){
+  Patch(id:string,model:Partial<UserPatch>){
     const url = `${this.baseUrl}/${id}`
     var patch = this.generatePatch(model);
     console.log(patch)

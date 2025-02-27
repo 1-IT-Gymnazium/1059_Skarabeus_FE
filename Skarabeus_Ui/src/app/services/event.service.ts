@@ -1,4 +1,4 @@
-import { EventDetailModel } from './../models/event.interface';
+import { EventCreateModel, EventDetailModel } from './../models/event.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
@@ -21,5 +21,9 @@ export class EventService {
       console.log(x)
       this.events.next(x)
     })
+  }
+
+  create(model:EventCreateModel){
+    return this.httpClient.post(`${this.baseUrl}`,model)
   }
 }

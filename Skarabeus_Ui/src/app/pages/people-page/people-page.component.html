@@ -1,9 +1,9 @@
-@let role = role$ | async;
+@let user = user$ | async;
 <div class="flex h_100-4 divide-x-2">
-  <div [class]="role=='Admin' ? 'w-1/2':'w-full'" class="h-full">
+  <div [class]="user?.role == 'Admin' ? 'w-1/2':'w-full'" class="h-full">
     <app-persons-list ></app-persons-list>
   </div>
-  @if(role == "Admin"){
+  @if(user?.role == "Admin"){
     <div class="w-1/2 h-full">
       <app-user-list></app-user-list>
     </div>

@@ -42,7 +42,7 @@ export class PersonsListComponent {
   }
 
   ngOnInit() {
-    this.personEditService.editPersonId$.subscribe(x=>this.openEditModal(x!))
+    this.personEditService.editPersonId$.subscribe(x=>{if(x!=null)this.openEditModal(x!)})
   }
 
   closeEditModal(){

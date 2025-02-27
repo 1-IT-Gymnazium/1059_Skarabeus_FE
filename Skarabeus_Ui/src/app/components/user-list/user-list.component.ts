@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
-import { UserCreate, UserDetail } from '../../models/user.interface';
+import { UserCreate, UserDetail, UserPatch } from '../../models/user.interface';
 import { PersonService } from '../../services/person.service';
 import { PersonEditService } from '../../services/PersonEdit.service';
 
@@ -46,7 +46,6 @@ export class UserListComponent{
 
   openCreateModal(){
     this.creatingUser.name = this.searchUsers;
-    this.creatingUser.personId = "";
     this.activeCreateModal=true
   }
 
@@ -95,7 +94,7 @@ export class UserListComponent{
   }
   
   updateField(field: string) {
-    const patch: Partial<UserCreate> = {};
+    const patch: Partial<UserPatch> = {};
     
     if ((this.editingUserBase as any)[field] !== (this.editingUser as any)[field]) {
       (patch as any)[field] = (this.editingUser as any)[field];
