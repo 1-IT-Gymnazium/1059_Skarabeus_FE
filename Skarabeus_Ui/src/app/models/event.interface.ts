@@ -12,7 +12,7 @@ export interface EventCreateModel {
 
 export interface EventDetailModel {
   id: string; // UUID format
-  responsiblePerson?: SmallPersonDetailModel | null;
+  responsiblePerson: SmallPersonDetailModel | null;
   participants: PersonDetailModel[];
   dishes: DishDetail[];
   name: string;

@@ -13,14 +13,8 @@ export class AuthService {
   private baseUrl = '/api/v1/Auth';
   private readonly router = inject(Router);
   private readonly httpClient = inject(HttpClient);
-  private userInfoModel = new ReplaySubject<UserDetail>(1);
+  private userInfoModel = new ReplaySubject<UserDetail|null>(1);
   userInfoModel$ = this.userInfoModel.asObservable();
-
-
-  /*
-  private isLoggedInSubject = new ReplaySubject<boolean>(1);
-  isLoggedIn$ = this.isLoggedInSubject.asObservable();
-*/
 
   constructor(){
     this.userInfo()
@@ -35,38 +29,27 @@ export class AuthService {
       })
     );
   }
-/*
-  refreshToken(): Observable<string> {
-    return this.httpClient
-      .post<{ token: string }>(`${this.baseUrl}/Refresh`, {}).pipe(
-        map((response) => {
-          const newAccessToken = response.token;
-          localStorage.setItem('accessToken', newAccessToken);
-          return newAccessToken;
-        })
-      );
-  }
-*/
+
   logout(): void {
     this.httpClient
       .post(`${this.baseUrl}/Logout`, {})
-      .subscribe(() => {
+      .subscribe((res) => {
         this.router.navigate(['/login']);
+        this.userInfo()
+        return res;
       });
   }
 
   userInfo(): void{
     this.httpClient
     .get<UserDetail>(`${this.baseUrl}`,{})
-    .subscribe(us => this.userInfoModel.next(us));
+    .subscribe({
+      next:(x)=>{
+        this.userInfoModel.next(x)
+      },
+      error:(err)=>{
+        this.userInfoModel.next(null);
+      }
+    });
   }
-/*
-  isAuthenticated(): boolean {
-    let isAuthenticated = false;
-    this.isLoggedInSubject
-      .subscribe((status) => (isAuthenticated = status))
-      .unsubscribe();
-    return isAuthenticated;
-  }
-    */
 }

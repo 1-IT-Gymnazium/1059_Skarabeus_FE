@@ -4,7 +4,7 @@ import { DishListComponent } from "../../components/dish-list/dish-list.componen
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [DishListComponent],
+  imports: [],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss'
 })

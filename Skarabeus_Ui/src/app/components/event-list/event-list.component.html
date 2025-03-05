@@ -1,151 +1,247 @@
-<div class="p-8 h-full">
-    <h1 class="text-xl">Events</h1>
-    <div class="flex flex-wrap">
-      <input
-        placeholder="search"
-        type="text"
-        [(ngModel)]="search"
-        class="w-1/2 h-8 p-2 my-4 mb-3 border rounded sm:w-1/4 md:w-1/5 xl:w-1/6"
-      />
-      @if(search!=""){
-        <button (click)="search = ''" class="ml-2 rounded-md">x</button>
-      }
-      <button (click)="openCreateModal()" class="w-8 h-8 my-4 ml-2 bg-blue-500 rounded-md">
-        <b>+</b>
-      </button>
-    </div>
-  
-    <div class="flex flex-wrap flex-1 overflow-y-scroll justify-evenly" style="height: calc(100% - 4rem);">
-      @if (events$ | async; as events) {
-        @for (event of events$ | async; track event) {
-          @if (normalizeString(event.name).indexOf(normalizeString(search)) != -1) {
-            <section (click)="openEditModal(event.id)" [class]="{'bg-slate-200' : ended(event.end)}" class="event" >
-              <h2 class="text-center">{{ event.name }}</h2>
-              <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ event.description }}</p>
-            </section>
-          }
-        }
-      }
-      @else {
-        Žádná data 😦
-      }
-    </div>
+<div class="p-8 h_100-4">
+  <h1 class="text-xl">Events</h1>
+  <div class="flex flex-wrap">
+    <input placeholder="search" type="text" [(ngModel)]="search"
+      class="w-1/2 h-8 p-2 my-4 mb-3 border rounded sm:w-1/4 md:w-1/5 xl:w-1/6" />
+    @if(search!=""){
+    <button (click)="search = ''" class="ml-2 rounded-md">x</button>
+    }
+    <button (click)="openCreateModal()" class="w-8 h-8 my-4 ml-2 bg-blue-500 rounded-md">
+      <b>+</b>
+    </button>
+  </div>
 
-    @if (activeCreateModal) {
-        <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-          <div class="w-5/6 p-6 pb-2 bg-white rounded-lg shadow-lg sm:w-3/6 md:w-2/6 h-fit">
-            <div class="flex flex-row">
-              <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Create Event</h2>
-              <button class="h-fit" (click)="closeCreateModal()">x</button>
-            </div>
-            <form #eventForm="ngForm" (ngSubmit)="checkForm(eventForm)" class="flex flex-col h-full inputs">
-              
-              <div class="flex flex-col flex-1 mx-1">
-                <label>Event Name</label>
-                <input
-                  minlength="3"
-                  class="rounded"
-                  type="text"
-                  name="name"
-                  [(ngModel)]="CreatingEvent.name"
-                  #name="ngModel"
-                  required>
-                  @if(name.invalid && name.touched){
-                    <p class="text-red-500">
-                      Event name must be at least 3 characters long.
-                    </p>
-                  }
-              </div>
-      
-              <div class="flex flex-col flex-1 mx-1">
-                <label>Description</label>
-                <input
-                  minlength="3"
-                  class="rounded"
-                  type="text"
-                  name="description"
-                  [(ngModel)]="CreatingEvent.description"
-                  #description="ngModel"
-                  required>
-                  @if(description.invalid && description.touched){
-                    <p class="text-red-500">
-                      Description must be at least 3 characters long.
-                    </p>
-                  }
-              </div>
-      
-              <div class="flex flex-col flex-1 mx-1">
-                <label>Place</label>
-                <input
-                  class="rounded"
-                  type="text"
-                  name="place"
-                  [(ngModel)]="CreatingEvent.place"
-                  #place="ngModel"
-                  required>
-                  @if(place.invalid && place.touched){
-                    <p class="text-red-500">
-                      Place is required.
-                    </p>
-                  }
-              </div>
-      
-              <div class="flex flex-col flex-1 mx-1">
-                <label>Responsible Person</label>
-                <select
-                  class="rounded"
-                  name="responsiblePersonId"
-                  [(ngModel)]="CreatingEvent.responsiblePersonId"
-                  required>
-                  <option value="" selected>none</option>
-                  @for(person of persons$ | async; track person){
-                    <option [value]="person.id">{{person.firstName}} {{person.lastName}}</option>
-                  }
-                </select>
-              </div>
-              <div class="flex flex-col justify-between md:flex-row">
-                <div class="flex flex-col flex-1 my-1 md:max-w-[50%] md:my-0 mx-1">
-                  <label>Start Date</label>
-                  <input
-                    class="rounded"
-                    type="date"
-                    name="start"
-                    [(ngModel)]="CreatingEvent.start"
-                    #start="ngModel"
-                    required>
-                  @if(start.invalid && start.touched){
-                    <p class="text-red-500">
-                      Start date is required.
-                    </p>
-                  }
-                </div>
-              
-                <div class="flex flex-col flex-1 my-1 md:max-w-[50%] md:my-0 mx-1">
-                  <label>End Date</label>
-                  <input
-                    class="rounded"
-                    type="date"
-                    name="end"
-                    [(ngModel)]="CreatingEvent.end"
-                    #end="ngModel"
-                    required>
-                  @if(end.invalid && end.touched){
-                    <p class="text-red-500">
-                      End date is required.
-                    </p>
-                  }
-                </div>
-              </div>
-      
-              <div class="flex justify-center m-2">
-                <button
-                  class="p-2 bg-teal-500 rounded-md"
-                  type="submit">
-                  Create Event
-                </button>
-              </div>
-            </form>
+  <div class="flex flex-wrap flex-1 overflow-y-scroll justify-evenly" style="height: calc(100% - 4rem);">
+    @if (events$ | async; as events) {
+    @for (event of events$ | async; track event) {
+    @if (normalizeString(event.name).indexOf(normalizeString(search)) != -1) {
+    <section (click)="openEditModal(event.id)" [class]="{'bg-slate-200' : ended(event.end)}" class="event">
+      <h2 class="text-center">{{ event.name }}</h2>
+      <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ event.description }}</p>
+    </section>
+    }
+    }
+    }
+    @else {
+    Žádná data 😦
+    }
+  </div>
+
+  @if (activeCreateModal) {
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+    <div class="w-5/6 p-6 pb-2 bg-white rounded-lg shadow-lg sm:w-3/6 md:w-2/6 h-fit">
+      <div class="flex flex-row">
+        <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Create Event</h2>
+        <button class="h-fit" (click)="closeCreateModal()">x</button>
+      </div>
+      <form #eventForm="ngForm" (ngSubmit)="checkForm(eventForm)" class="flex flex-col h-full inputs">
+
+        <div class="flex flex-col flex-1 mx-1">
+          <label>Event Name</label>
+          <input minlength="3" class="rounded" type="text" name="name" [(ngModel)]="CreatingEvent.name" #name="ngModel"
+            required>
+          @if(name.invalid && name.touched){
+          <p class="text-red-500">
+            Event name must be at least 3 characters long.
+          </p>
+          }
+        </div>
+
+        <div class="flex flex-col flex-1 mx-1">
+          <label>Description</label>
+          <input minlength="3" class="rounded" type="text" name="description" [(ngModel)]="CreatingEvent.description"
+            #description="ngModel" required>
+          @if(description.invalid && description.touched){
+          <p class="text-red-500">
+            Description must be at least 3 characters long.
+          </p>
+          }
+        </div>
+
+        <div class="flex flex-col flex-1 mx-1">
+          <label>Place</label>
+          <input class="rounded" type="text" name="place" [(ngModel)]="CreatingEvent.place" #place="ngModel" required>
+          @if(place.invalid && place.touched){
+          <p class="text-red-500">
+            Place is required.
+          </p>
+          }
+        </div>
+
+        <div class="flex flex-col flex-1 mx-1">
+          <label>Responsible Person</label>
+          <select class="rounded" name="responsiblePersonId" [(ngModel)]="CreatingEvent.responsiblePersonId" required>
+            <option value="" selected>none</option>
+            @for(person of persons$ | async; track person){
+            <option [value]="person.id">{{person.firstName}} {{person.lastName}}</option>
+            }
+          </select>
+        </div>
+        <div class="flex flex-col justify-between md:flex-row">
+          <div class="flex flex-col flex-1 my-1 md:max-w-[50%] md:my-0 mx-1">
+            <label>Start Date</label>
+            <input class="rounded" type="date" name="start" [(ngModel)]="CreatingEvent.start" #start="ngModel" required>
+            @if(start.invalid && start.touched){
+            <p class="text-red-500">
+              Start date is required.
+            </p>
+            }
+          </div>
+
+          <div class="flex flex-col flex-1 my-1 md:max-w-[50%] md:my-0 mx-1">
+            <label>End Date</label>
+            <input class="rounded" type="date" name="end" [(ngModel)]="CreatingEvent.end" #end="ngModel" required>
+            @if(end.invalid && end.touched){
+            <p class="text-red-500">
+              End date is required.
+            </p>
+            }
           </div>
         </div>
-      }
-      
+
+        <div class="flex justify-center m-2">
+          <button class="p-2 bg-teal-500 rounded-md" type="submit">
+            Create Event
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  }
+
+  @if (activeEditModal) {
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-10">
+    <div class="w-4/5 p-6 bg-white rounded-lg shadow-lg h-4/5 flex flex-row">
+      <div class="w-5/12 flex flex-col pr-4 ">
+        <div class="flex flex-row mb-4">
+          <h2 class="flex-1 text-lg font-semibold text-center text-gray-700">Editing Event</h2>
+          <button class="h-fit" (click)="closeEditModal()">x</button>
+        </div>
+        <form #eventForm="ngForm" class="editing_inputs flex flex-wrap h_100-4">
+          <div class="edit_input w-full">
+            <label>Event Name</label>
+            <div class="flex w-full">
+              <input type="text" class="rounded flex-1" name="name" [(ngModel)]="editingEvent$.name" #name="ngModel"
+                required minlength="3" (blur)="onBlur('name', name.valid!)">
+              <button class="p-2 ml-2 bg-red-500 rounded-md" type="button" (click)="deleteEvent()">Delete</button>
+            </div>
+            @if(name.invalid && name.touched){
+            <p class="text-red-500">Name is required (min. 3 characters).</p>
+            }
+          </div>
+
+          <div class="edit_input w-full">
+            <label>Description</label>
+            <textarea class="rounded" name="description" [(ngModel)]="editingEvent$.description" #description="ngModel"
+              required (blur)="onBlur('description', description.valid!)"></textarea>
+            @if(description.invalid && description.touched){
+            <p class="text-red-500">Description is required.</p>
+            }
+          </div>
+
+          <div class="edit_input w-full md:w-1/2">
+            <label>Place</label>
+            <input type="text" class="rounded w-full" name="place" [(ngModel)]="editingEvent$.place" #place="ngModel"
+              required minlength="3" (blur)="onBlur('place', place.valid!)">
+            @if(place.invalid && place.touched){
+            <p class="text-red-500">Place is required (min. 3 characters).</p>
+            }
+          </div>
+
+          <div class="edit_input w-full md:w-1/2">
+            <label>Responsible Person</label>
+            <select class="rounded w-full" name="responsiblePersonId" [(ngModel)]="editingEvent$.responsiblePerson!.id"
+              #responsiblePersonId="ngModel" required>
+              <option value="" selected>None</option>
+              @for(person of persons$ | async; track person){
+              <option [value]="person.id">{{ person.firstName }} {{ person.lastName }}</option>
+              }
+            </select>
+            @if(responsiblePersonId.invalid && responsiblePersonId.touched){
+            <p class="text-red-500">Responsible person is required.</p>
+            }
+          </div>
+
+          <div class="edit_input w-full md:w-1/2 pr-1">
+            <label>Start Date</label>
+            <input type="date" class="rounded w-full" name="start" [(ngModel)]="editingEvent$.start" #start="ngModel"
+              required (blur)="onBlur('start', start.valid!)">
+            @if(start.invalid && start.touched){
+            <p class="text-red-500">Start date is required.</p>
+            }
+          </div>
+
+          <div class="edit_input w-full md:w-1/2 pl-1">
+            <label>End Date</label>
+            <input type="date" class="rounded w-full" name="end" [(ngModel)]="editingEvent$.end" #end="ngModel" required
+              (blur)="onBlur('end', end.valid!)">
+            @if(end.invalid && end.touched){
+            <p class="text-red-500">End date is required.</p>
+            }
+          </div>
+        </form>
+
+      </div>
+      <div class="flex-1 flex flex-col pl-4">
+        <div class="h-1/2">
+          <label class="mx-10">Persons</label>
+          <div class="flex flex-wrap justify-center px-10 mb-2">
+            <input placeholder="search" type="text" [(ngModel)]="searchPersons" class="flex-1 border rounded" />
+            @if(searchPersons != ''){
+            <button (click)="searchPersons = ''" class="ml-2 rounded-md">x</button>
+            }
+            <button (click)="createPerson()" class="w-10 h-10 ml-2 bg-blue-500 rounded-md">
+              <b>+</b>
+            </button>
+          </div>
+          <div class="flex w-full flex-wrap overflow-scroll h_100-4">
+            @if (!((persons$ | async)?.length == 0)) {
+              @for (person of persons$ | async; track person) {
+                @if (normalizeString(person.firstName + ' ' + person.lastName).indexOf(normalizeString(searchPersons)) != -1) {
+                  @if(EditingEventContainsPerson(person.id) == undefined){
+                    <section class="bg-slate-300 select-item">
+                      <h2 class="flex-1 overflow-hidden max-w-8/12" (click)="addPersonToEvent(person.id)">{{ person.firstName }}
+                        {{ person.lastName }}</h2>
+                      <button class="navigation" (click)="editPerson(person.id)"><img src="assets/edit.svg"
+                          class="h-5/6"></button>
+                    </section>
+                  }
+                }
+              }
+            } @else {
+            Žádná data 😦
+            }
+          </div>
+        </div>
+        <div class="h-1/2">
+          <label class="mx-10">Dishes</label>
+          <div class="flex flex-wrap justify-center px-10 mb-2">
+            <input placeholder="search" type="text" [(ngModel)]="searchDishes" class="flex-1 border rounded" />
+            @if(searchDishes != ''){
+            <button (click)="searchDishes = ''" class="ml-2 rounded-md">x</button>
+            }
+            <button (click)="createFood()" class="w-10 h-10 ml-2 bg-blue-500 rounded-md">
+              <b>+</b>
+            </button>
+          </div>
+          <div class="flex flex-col w-full overflow-y-scroll h_100-4">
+            @if (!((dishes$ | async)?.length == 0)) {
+            @for (food of dishes$ | async; track food) {
+            @if (normalizeString(food.name).indexOf(normalizeString(searchDishes)) != -1) {
+            <section class="select-item">
+              <h2 class="flex-1 overflow-hidden max-w-8/12" (click)="addFoodToEvent(food.id)">{{ food.name }}</h2>
+              <button class="navigation" (click)="editFood(food.id)"><img src="assets/edit.svg" class="h-5/6"></button>
+            </section>
+            }
+            }
+            } @else {
+            Žádná data 😦
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+</div>

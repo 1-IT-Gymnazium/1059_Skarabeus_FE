@@ -5,27 +5,38 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { NotFoundPageComponent } from './pages/errors/not-found-page/not-found-page.component';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { FoodPageComponent } from './pages/food-page/food-page.component';
-import { PersonsListComponent } from './components/persons-list/persons-list.component';
 import { PeoplePageComponent } from './pages/people-page/people-page.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
       path: '',
       component: DefaultComponent,
       children: [
-        { path: '', component: HomePageComponent, title: 'Home'},
-        { path: 'login', component: LoginPageComponent, title: 'Login' },
+        { 
+          path: 'login', 
+          component: LoginPageComponent, 
+          title: 'Login' 
+        },
+        { 
+          path: '', 
+          component: HomePageComponent, 
+          title: 'Home',
+        },
         {
           path:'food',
-          component:FoodPageComponent
+          component:FoodPageComponent,
+          canActivate: [AuthGuard],
         },
         {
           path:"events",
-          component:EventListComponent
+          component:EventListComponent,
+          canActivate: [AuthGuard],
         },
         {
           path:"people",
-          component:PeoplePageComponent
+          component:PeoplePageComponent,
+          canActivate: [AuthGuard],
         },
         {
           path: 'not-found',

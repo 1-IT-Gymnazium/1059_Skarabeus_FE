@@ -16,10 +16,21 @@ export class DefaultComponent {
     
   }
   drop!:Dropdown
-  
+  dropdownVisible = false;
+
+  toggleDropdown(): void {
+    this.dropdownVisible = !this.dropdownVisible;
+  }
+
   protected user$ = this.authService.userInfoModel$;
   
+  refresh(){
+    this.authService.userInfo();
+  }
+
   logout() {
-    this.authService.logout();
+    this.authService.logout()
+    this.dropdownVisible = false
+    this.refresh()
   }
 }
