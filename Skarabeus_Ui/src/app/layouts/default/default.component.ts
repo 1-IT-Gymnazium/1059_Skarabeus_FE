@@ -1,8 +1,8 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { Dropdown } from 'flowbite';
+import 'flowbite';
  
 @Component({
   selector: 'app-default',
@@ -12,17 +12,17 @@ import { Dropdown } from 'flowbite';
   styleUrl: './default.component.scss',
 })
 export class DefaultComponent {
-  constructor(private authService:AuthService) {
-    
-  }
-  drop!:Dropdown
-  dropdownVisible = false;
+  authService=inject(AuthService)
 
+  protected user$ = this.authService.userInfoModel$;
+
+  constructor() {    
+  }
+
+  dropdownVisible = false;
   toggleDropdown(): void {
     this.dropdownVisible = !this.dropdownVisible;
   }
-
-  protected user$ = this.authService.userInfoModel$;
   
   refresh(){
     this.authService.userInfo();

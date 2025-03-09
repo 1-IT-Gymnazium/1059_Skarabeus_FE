@@ -38,7 +38,8 @@ export class LoginPageComponent {
           await this.router.navigate(['/']);
       },
       error: (error) => {
-        this.lastError$ = error
+        console.log(error.error)
+        this.lastError$ = error.error.title
       }
     });
   }

@@ -1,7 +1,7 @@
 import { EventCreateModel, EventDetailModel } from './../models/event.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -38,10 +38,29 @@ export class EventService {
   }
 
 
-  AddPersonToEvent(id: string, personId: string) {
+  addPersonToEvent(id: string, personId: string) {
     const url = `${this.baseUrl}/AddPersonToEvent/${id}/${personId}`;
     return this.httpClient.get<EventDetailModel>(url)
   }
+
+  removePersonFromEvent(id: string, personId: string) {
+    const url = `${this.baseUrl}/RemovePersonFromEvent/${id}/${personId}`;
+    return this.httpClient.delete<EventDetailModel>(url)
+  }
+
+  addDishToEvent(id: string, dishId: string) {
+    const url = `${this.baseUrl}/AddDishToEvent/${id}/${dishId}`;
+    return this.httpClient.get<EventDetailModel>(url)
+  }
+
+  removeDishFromEvent(id: string, dishId: string) {
+    const url = `${this.baseUrl}/RemoveDishFromEvent/${id}/${dishId}`;
+    return this.httpClient.delete<EventDetailModel>(url)
+  }
+
+
+
+
 
   generatePatch<T>(updated: Partial<T>): any[] {
     const patch: any[] = [];

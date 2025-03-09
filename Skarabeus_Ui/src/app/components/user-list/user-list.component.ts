@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { UserCreate, UserDetail, UserPatch } from '../../models/user.interface';
 import { PersonService } from '../../services/person.service';
-import { PersonEditService } from '../../services/PersonEdit.service';
+import { EditService } from '../../services/Edit.service';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-list',
@@ -14,6 +16,13 @@ import { PersonEditService } from '../../services/PersonEdit.service';
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent{
+  private userService=inject(UserService)
+  private personService=inject(PersonService)
+  private editService=inject(EditService)
+  private router=inject(Router)
+
+  roles = ["","Admin","UserManger"]
+
   protected users$ = this.userService.users$;
   protected persons$ = this.personService.persons$;
 
@@ -28,11 +37,11 @@ export class UserListComponent{
   editingUser:UserDetail = {} as UserDetail;
   editingUserBase:UserDetail = {} as UserDetail;
 
-  constructor(private userService:UserService, private personService:PersonService, private personEditService:PersonEditService) {
+  constructor() {
   }
 
   openPersonEdit(){
-    this.personEditService.openEditModal(this.editingUser.person.id)
+    this.editService.openPersonEditModal(this.editingUser.person.id, this.router.url)
   }
 
   refresh(){
@@ -91,6 +100,33 @@ export class UserListComponent{
         this.closeCreateModal()
       }
     )
+  }
+
+
+  delete(){
+    this.userService.delete(this.editingUser.id)
+    .subscribe(
+      x =>
+      {
+        this.refresh()
+      }
+    )
+  }
+
+  unDelete(){
+    this.userService.unDelete(this.editingUser.id)
+    .subscribe(
+      x =>
+      {
+        this.refresh()
+      }
+    )
+  }
+
+  changeRole(){
+    console.log(this.editingUser)
+    if(this.editingUser.role == "") this.userService.removeRole(this.editingUser.id).subscribe(x=>this.refresh());
+    else  this.userService.addRole(this.editingUser.id,this.editingUser.role).subscribe(x=>this.refresh());
   }
   
   updateField(field: string) {

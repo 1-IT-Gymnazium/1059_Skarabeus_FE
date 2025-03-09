@@ -184,7 +184,7 @@
       </div>
       <div class="flex-1 flex flex-col pl-4">
         <div class="h-1/2">
-          <label class="mx-10">Persons</label>
+          <label class="mx-10">Participants</label>
           <div class="flex flex-wrap justify-center px-10 mb-2">
             <input placeholder="search" type="text" [(ngModel)]="searchPersons" class="flex-1 border rounded" />
             @if(searchPersons != ''){
@@ -195,8 +195,19 @@
             </button>
           </div>
           <div class="flex w-full flex-wrap overflow-scroll h_100-4">
+            
+            @for (person of editingEvent$.participants; track person.id) {
+                @if (normalizeString(person.firstName + ' ' + person.lastName).indexOf(normalizeString(searchPersons)) != -1) {
+                    <section class="select-item">
+                      <h2 class="flex-1 overflow-hidden max-w-8/12" (click)="removePersonFromEvent(person.id)">{{ person.firstName }}
+                        {{ person.lastName }}</h2>
+                      <button class="navigation" (click)="editPerson(person.id)"><img src="assets/edit.svg"
+                          class="h-5/6"></button>
+                    </section>
+                }
+              }
             @if (!((persons$ | async)?.length == 0)) {
-              @for (person of persons$ | async; track person) {
+              @for (person of persons$ | async; track person.id) {
                 @if (normalizeString(person.firstName + ' ' + person.lastName).indexOf(normalizeString(searchPersons)) != -1) {
                   @if(EditingEventContainsPerson(person.id) == undefined){
                     <section class="bg-slate-300 select-item">
@@ -224,16 +235,29 @@
               <b>+</b>
             </button>
           </div>
-          <div class="flex flex-col w-full overflow-y-scroll h_100-4">
+          <div class="flex w-full flex-wrap overflow-scroll h_100-4">
+            
+            @for (food of editingEvent$.dishes; track food.id) {
+                @if (normalizeString(food.name).indexOf(normalizeString(searchDishes)) != -1) {
+                    <section class="select-item">
+                      <h2 class="flex-1 overflow-hidden max-w-8/12" (click)="removeDishFromEvent(food.id)">{{ food.name }}</h2>
+                      <button class="navigation" (click)="editFood(food.id)"><img src="assets/edit.svg"
+                          class="h-5/6"></button>
+                    </section>
+                }
+              }
             @if (!((dishes$ | async)?.length == 0)) {
-            @for (food of dishes$ | async; track food) {
-            @if (normalizeString(food.name).indexOf(normalizeString(searchDishes)) != -1) {
-            <section class="select-item">
-              <h2 class="flex-1 overflow-hidden max-w-8/12" (click)="addFoodToEvent(food.id)">{{ food.name }}</h2>
-              <button class="navigation" (click)="editFood(food.id)"><img src="assets/edit.svg" class="h-5/6"></button>
-            </section>
-            }
-            }
+              @for (food of dishes$ | async; track food.id) {
+                @if (normalizeString(food.name).indexOf(normalizeString(searchDishes)) != -1) {
+                  @if(EditingEventContainsDish(food.id) == undefined){
+                    <section class="bg-slate-300 select-item">
+                      <h2 class="flex-1 overflow-hidden max-w-8/12" (click)="addDishToEvent(food.id)">{{ food.name }}</h2>
+                      <button class="navigation" (click)="editFood(food.id)"><img src="assets/edit.svg"
+                          class="h-5/6"></button>
+                    </section>
+                  }
+                }
+              }
             } @else {
             Žádná data 😦
             }

@@ -1,12 +1,13 @@
 import { DishAddIngredientModel, IngredientDishDetail,  } from './../../models/dish.interface';
 import { DishCreate, DishDetail,  } from '../../models/dish.interface';
-import { AsyncPipe, CommonModule, NumberSymbol } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { DishService } from '../../services/dish.service';
 import { IngredientService } from '../../services/ingredient.service';
 import { IngredientDetail } from '../../models/ingredient/ingredient-detail.interface';
-import { ActivatedRoute } from '@angular/router';
+import { EditService } from '../../services/Edit.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -22,37 +23,47 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './dish-list.component.scss'
 })
 export class DishListComponent {
+    protected dishService=inject(DishService)
+    protected ingredientService=inject(IngredientService)
+    private editService=inject(EditService)
+    private router=inject(Router)
 
   protected dishes$;
   protected ingredients$;
+
+  creatingDish={}as DishCreate;
 
   search:string = "";
   searchIngredients:string = "";
 
   activeModal=false
+  activeCreateModal = false
 
   editingIngredients:string[]=[];
 
   editingDish$:DishDetail ={id:"",name:"",description:"",ingredients:undefined};
 
-  constructor(protected dishService: DishService,protected ingredientService:IngredientService,private route: ActivatedRoute) {
+  constructor() {
 
     this.dishes$ = this.dishService.dishes$;
-    this.ingredients$ = ingredientService.ingredients$
-    this.route.queryParams.subscribe(params => {
-      if(params['id']!=undefined) this.openEditModal(params['id'])
-    });
+    this.ingredients$ = this.ingredientService.ingredients$
 
   }
 
   ngOnInit() {
+    this.editService.EditDishId$.subscribe(x=>{console.log(x);if(x!=null)this.openEditModal(x!)});
+    if(this.editService.openDishCreate) this.openCreateModal();
+    this.editService.openDishCreate = false
   }
 
-  closeModal(){
+  closeEditModal(){
     this.refresh()
     this.editingDish$ = {id:"",name:"",description:"",ingredients:undefined};
     this.editingIngredients = []
     this.activeModal=false;
+    this.editService.closeDishEdit()
+    var url = this.editService.popReturnUrl()
+    if(url) this.router.navigateByUrl(url);
   }
 
   openEditModal(id:string){
@@ -63,6 +74,16 @@ export class DishListComponent {
       }
     )
     this.openModal()
+  }
+
+  openCreateModal(){
+    this.creatingDish.name = this.search
+    this.activeCreateModal = true
+  }
+
+  closeCreateModal(){
+    this.creatingDish = {} as DishCreate
+    this.activeCreateModal = false
   }
 
   openModal(){
@@ -104,13 +125,27 @@ export class DishListComponent {
 
   remove(){
     this.dishService.RemoveDish(this.editingDish$.id)
-    this.closeModal()
+    this.closeEditModal()
   }
 
-  create(): void {
-    const ing:DishCreate = {name: this.search,description : "description"}
-    this.dishService.CreateDish(ing).subscribe(x=>this.refresh())
 
+  checkForm(form: NgForm) {
+    if (form.invalid) {
+      Object.values(form.controls).forEach(control => {
+        control.markAsTouched();
+      });
+    }
+    else{
+      this.create()
+    }
+  }
+
+
+  create(): void {
+    this.dishService.CreateDish(this.creatingDish).subscribe(x=>this.refresh())
+    var url = this.editService.popReturnUrl()
+    if(url) this.router.navigateByUrl(url);
+    this.closeCreateModal()
   }
 
   normalizeString(ob:string){

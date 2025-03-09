@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { PersonCreateModel, PersonDetailModel } from '../models/person.interface';
 import { HttpClient } from '@angular/common/http';
 
@@ -43,8 +43,8 @@ export class PersonService {
     return this.httpClient.delete(`${this.baseUrl}/${id}`)
   }
 
-  Create(model:PersonCreateModel){
-    return this.httpClient.post(this.baseUrl,model);
+  Create(model:PersonCreateModel):Observable<PersonDetailModel>{
+    return this.httpClient.post<PersonDetailModel>(this.baseUrl,model);
   }
 
   Patch(id:string,model:Partial<PersonCreateModel>){

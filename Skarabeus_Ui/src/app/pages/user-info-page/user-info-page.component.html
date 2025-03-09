@@ -1,0 +1,53 @@
+
+    <div class="flex items-center justify-center bg-gray-400 bg-opacity-75 h_100-4">
+      <div class="w-5/6 p-6 bg-white rounded-lg shadow-lg sm:w-3/6 md:w-2/6 h-fit">
+        <div class="flex flex-row">
+          <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">User Information</h2>
+        </div>
+        <div class="flex flex-col h-full">
+          <!-- username -->
+          <div class="flex flex-col flex-1 mx-1">
+            <label [class]="userName.invalid && userName.touched ? 'text-red-600' : '' ">
+              User name
+              @if(userName.invalid && userName.touched){
+                is required
+              }
+            </label>
+            <input
+              (blur)="onBlur('userName', userName.valid!)"
+              class="rounded"
+              type="text"
+              name="userName"
+              [(ngModel)]="user.userName"
+              #userName="ngModel"
+              pattern="^(?!\s*$).+" 
+              required>
+          </div>
+          <!-- email -->
+          <div class="flex flex-col flex-1 mx-1">
+            <label [class]="userMail.invalid && userMail.touched ? 'text-red-600' : '' ">
+              User email
+              @if(userMail.invalid && userMail.touched){
+                   must be a valid email address
+              }
+            </label>
+            <input
+              (blur)="onBlur('userEmail', userMail.valid!)"
+              class="rounded"
+              type="email"
+              name="userMail"
+              [(ngModel)]="user.email"
+              #userMail="ngModel"
+              required
+              email>
+          </div>
+          <div class="flex justify-center m-2">
+            <button
+              class="p-2 bg-teal-500 rounded-md"
+              (click)="openPersonEdit()">
+              Identity
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>

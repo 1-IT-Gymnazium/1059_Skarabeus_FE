@@ -1,188 +1,161 @@
 <div class="p-8 h-full">
   <h1 class="text-xl">Users</h1>
   <div class="flex flex-wrap">
-    <input
-      placeholder="search"
-      type="text"
-      [(ngModel)]="searchUsers"
-      class="w-1/2 h-8 p-2 my-4 mb-3 border rounded sm:w-1/4 md:w-1/5 xl:w-1/6"
-    />
+    <input placeholder="search" type="text" [(ngModel)]="searchUsers"
+      class="w-1/2 h-8 p-2 my-4 mb-3 border rounded sm:w-1/4 md:w-1/5 xl:w-1/6" />
     @if(searchUsers != ""){
-      <button (click)="searchUsers = ''" class="ml-2 rounded-md">x</button>
+    <button (click)="searchUsers = ''" class="ml-2 rounded-md">x</button>
     }
-    
+
     <button (click)="openCreateModal()" class="w-8 h-8 my-4 ml-2 bg-blue-500 rounded-md">
       <b>+</b>
     </button>
   </div>
   <div class="flex flex-wrap flex-1 overflow-y-scroll justify-evenly" style="height: calc(100% - 4rem);">
     @if (users$ | async; as users) {
-      @for (user of users$ | async; track user) {
-        @if (normalizeString(user.userName).indexOf(normalizeString(searchUsers)) != -1) {
-          <section class="user" (click)="openEditModal(user.id)">
-            <h2 class="text-center">{{ user.id }}</h2>
-            <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ user.userName }}</p>
-          </section>
-        }
-      }
+    @for (user of users$ | async; track user) {
+    @if (normalizeString(user.userName).indexOf(normalizeString(searchUsers)) != -1) {
+    <section [class]="user.deleted?'bg-slate-200':''" class="user" (click)="openEditModal(user.id)">
+      <h2 class="text-center">{{ user.id }}</h2>
+      <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ user.userName }}</p>
+    </section>
+    }
+    }
     }
     @else {
-      Žádná data 😦
+    Žádná data 😦
     }
   </div>
-  
-  @if (activeCreateModal) {
-    <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-      <div class="w-5/6 p-6 pb-2 bg-white rounded-lg shadow-lg sm:w-3/6 md:w-2/6 h-fit">
-        <div class="flex flex-row">
-          <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Creating</h2>
-          <button class="h-fit" (click)="closeCreateModal()">x</button>
-        </div>
-        <form #userForm="ngForm" (ngSubmit)="validateAndTryCreate(userForm)" class="flex flex-col h-full inputs">
-          <!-- username -->
-          <div class="flex flex-col flex-1 mx-1">
-            <label [class]="userName.invalid && userName.touched ? 'text-red-600' : '' ">
-              User name
-              @if(userName.invalid && userName.touched){
-                is required
-              }
-            </label>
-            <input
-              class="rounded"
-              type="text"
-              name="userName"
-              [(ngModel)]="creatingUser.name"
-              #userName="ngModel"
-              pattern="^(?!\s*$).+" 
-              required>
-          </div>
-          <!-- email -->
-          <div class="flex flex-col flex-1 mx-1">
-            <label [class]="userMail.invalid && userMail.touched ? 'text-red-600' : '' ">
-              User email
-              @if(userMail.invalid && userMail.touched){
-                   must be a valid email address
-              }
-            </label>
-            <input
-              class="rounded"
-              type="email"
-              name="userMail"
-              [(ngModel)]="creatingUser.email"
-              #userMail="ngModel"
-              required
-              email>
-          </div>
-          <!-- password -->
-          <div class="flex flex-col flex-1 mx-1">
-            <label [class.text-red-600]="password.invalid && password.touched">
-              Password 
-              @if(password.invalid && password.touched){
-                must be at least 8 characters, with at least 1 letter and 1 number.
-              }
-            </label>
-        
-            <input
-              class="rounded border p-2"
-              type="password"
-              name="password"
-              [(ngModel)]="creatingUser.password"
-              #password="ngModel"
-              required
-              pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$"
-            >
-          </div>
-          <!-- confirm password -->
-          <div class="flex flex-col flex-1 mx-1">
-            <label [class.text-red-600]="passwordMismatch && confirmPassword.touched">
-              Confirm Password
-              @if(passwordMismatch && confirmPassword.touched){
-                does not match
-              }
-            </label>
-        
-            <input
-              class="rounded border p-2"
-              type="password"
-              name="confirmPassword"
-              [(ngModel)]="password2"
-              #confirmPassword="ngModel"
-              required
-              (input)="checkPasswords()"
-            >
-          </div>
-          <div class="flex flex-col flex-1 mx-1">
-            <label [class]="userPerson.invalid && userPerson.touched ? 'text-red-600' : '' ">Identity of user</label>
-            <select 
-            class="rounded" 
-            #userPerson="ngModel"
-            name="personId"
-            [(ngModel)]="creatingUser.personId"
-            required>
-              <option [ngValue]="null" disabled selected>none</option>
-              @for(person of persons$ | async;track person){
-                <option [value]="person.id">{{person.firstName}}</option>
-              }
-            </select>
-          </div>
-          <div class="flex justify-center m-2">
-            <button
-              class="p-2 bg-teal-500 rounded-md"
-              type="submit">
-              Create
-            </button>
-          </div>
-        </form>
 
+  @if (activeCreateModal) {
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+    <div class="w-5/6 p-6 pb-2 bg-white rounded-lg shadow-lg sm:w-3/6 md:w-2/6 h-fit">
+      <div class="flex flex-row">
+        <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Creating</h2>
+        <button class="h-fit" (click)="closeCreateModal()">x</button>
       </div>
+      <form #userForm="ngForm" (ngSubmit)="validateAndTryCreate(userForm)" class="flex flex-col h-full inputs">
+        <!-- username -->
+        <div class="flex flex-col flex-1 mx-1">
+          <label [class]="userName.invalid && userName.touched ? 'text-red-600' : '' ">
+            User name
+            @if(userName.invalid && userName.touched){
+            is required
+            }
+          </label>
+          <input class="rounded" type="text" name="userName" [(ngModel)]="creatingUser.name" #userName="ngModel"
+            pattern="^(?!\s*$).+" required>
+        </div>
+        <!-- email -->
+        <div class="flex flex-col flex-1 mx-1">
+          <label [class]="userMail.invalid && userMail.touched ? 'text-red-600' : '' ">
+            User email
+            @if(userMail.invalid && userMail.touched){
+            must be a valid email address
+            }
+          </label>
+          <input class="rounded" type="email" name="userMail" [(ngModel)]="creatingUser.email" #userMail="ngModel"
+            required email>
+        </div>
+        <!-- password -->
+        <div class="flex flex-col flex-1 mx-1">
+          <label [class.text-red-600]="password.invalid && password.touched">
+            Password
+            @if(password.invalid && password.touched){
+            must be at least 8 characters, with at least 1 letter and 1 number.
+            }
+          </label>
+
+          <input class="rounded border p-2" type="password" name="password" [(ngModel)]="creatingUser.password"
+            #password="ngModel" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$">
+        </div>
+        <!-- confirm password -->
+        <div class="flex flex-col flex-1 mx-1">
+          <label [class.text-red-600]="passwordMismatch && confirmPassword.touched">
+            Confirm Password
+            @if(passwordMismatch && confirmPassword.touched){
+            does not match
+            }
+          </label>
+
+          <input class="rounded border p-2" type="password" name="confirmPassword" [(ngModel)]="password2"
+            #confirmPassword="ngModel" required (input)="checkPasswords()">
+        </div>
+        <div class="flex flex-col flex-1 mx-1">
+          <label [class]="userPerson.invalid && userPerson.touched ? 'text-red-600' : '' ">Identity of user</label>
+          <select class="rounded" #userPerson="ngModel" name="personId" [(ngModel)]="creatingUser.personId" required>
+            <option [ngValue]="null" disabled selected>none</option>
+            @for(person of persons$ | async;track person){
+            <option [value]="person.id">{{person.firstName}}</option>
+            }
+          </select>
+        </div>
+        <div class="flex justify-center m-2">
+          <button class="p-2 bg-teal-500 rounded-md" type="submit">
+            Create
+          </button>
+        </div>
+      </form>
+
     </div>
+  </div>
   }
 
   @if (activeEditModal) {
-    <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-      <div class="w-4/5 p-6 bg-white rounded-lg shadow-lg h-4/5">
-        <div class="flex flex-row">
-          <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Editing User</h2>
-          <button class="h-fit" (click)="closeEditModal()">x</button>
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+    <div [class]="editingUser.deleted ? 'bg-slate-200' : 'bg-white'" class="w-96 p-6  rounded-lg shadow-lg">
+      <div class="flex flex-row mx-3">
+        <h2 class="flex-1 text-lg font-semibold text-center text-gray-700">Editing User</h2>
+        <button class="h-fit" (click)="closeEditModal()">x</button>
+      </div>
+      <div class="flex flex-col h_100-4">
+        <!-- username -->
+        <div class="flex flex-col flex-1 m-3">
+          <label [class]="userName.invalid && userName.touched ? 'text-red-600' : '' ">
+            User name
+            @if(userName.invalid && userName.touched){
+            is required
+            }
+          </label>
+          <input (blur)="onBlur('userName', userName.valid!)" class="rounded" type="text" name="userName"
+            [(ngModel)]="editingUser.userName" #userName="ngModel" pattern="^(?!\s*$).+" required>
         </div>
-  
-        <div class="flex flex-wrap editing_inputs h_100-6">
-          <!-- Username -->
-          <div>
-            <label>Username</label>
-            <input type="text" class="rounded"
-                   [(ngModel)]="editingUser.userName"
-                   #userName="ngModel"
-                   required minlength="3"
-                   (blur)="onBlur('userName', userName.valid!)">
-            @if (userName.invalid && userName.touched) {
-              <span class="text-red-500">Invalid Username</span>
+        <!-- email -->
+        <div class="flex flex-col flex-1 m-3">
+          <label [class]="userMail.invalid && userMail.touched ? 'text-red-600' : '' ">
+            User email
+            @if(userMail.invalid && userMail.touched){
+            must be a valid email address
             }
-          </div>
-  
-          <!-- Email -->
-          <div>
-            <label>Email</label>
-            <input type="email" class="rounded"
-                   [(ngModel)]="editingUser.email"
-                   #email="ngModel"
-                   required
-                   email
-                   (blur)="onBlur('email', email.valid!)">
-            @if (email.invalid && email.touched) {
-              <span class="text-red-500">Invalid email</span>
+          </label>
+          <input (blur)="onBlur('userEmail', userMail.valid!)" class="rounded" type="email" name="userMail"
+            [(ngModel)]="editingUser.email" #userMail="ngModel" required email>
+        </div>
+        <!-- role -->
+        <div class="flex flex-col flex-1 m-3">
+          <label [class]="userMail.invalid && userMail.touched ? 'text-red-600' : '' ">
+            User Role
+          </label>
+          <select class="rounded" [(ngModel)]="editingUser.role" (change)="changeRole()">
+            @for(role of roles;track role){
+              <option [value]="role">{{role==""?'None':role}}</option>
             }
-          </div> 
-          <div>
-            <button (click)="openPersonEdit()">person</button>
-          </div>
-          <!-- Submit & Delete Buttons -->
-          <div class="mt-4 w-full flex justify-between">
-            <!-- <button class="px-4 py-2 bg-red-500 text-white rounded" (click)="remove()">Delete</button> -->
-          </div>
+          </select>
+        </div>
+        <div class="flex justify-center mt-2 space-x-5">
+          <button class="p-2 bg-teal-500 rounded-md" (click)="openPersonEdit()">
+            Identity
+          </button>
+            @if(editingUser.deleted){
+              <button class="p-2 bg-red-500 rounded-md" (click)="unDelete()">Undelete</button>
+            }
+            @else {
+              <button class="p-2 bg-orange-500 rounded-md" (click)="delete()">Delete</button>
+            }
         </div>
       </div>
     </div>
+  </div>
   }
-  
+
 </div>

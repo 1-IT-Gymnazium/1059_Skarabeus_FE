@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, generate, Observable, ReplaySubject } from 'rxjs';
 import { IngredientDetail } from '../models/ingredient/ingredient-detail.interface';
-import * as jsonpatch from 'fast-json-patch';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { IngredientCreate } from '../models/ingredient/ingredient-create.interface';
 

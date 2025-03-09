@@ -7,6 +7,7 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { FoodPageComponent } from './pages/food-page/food-page.component';
 import { PeoplePageComponent } from './pages/people-page/people-page.component';
 import { AuthGuard } from './guards/auth.guard';
+import { UserInfoPageComponent } from './pages/user-info-page/user-info-page.component';
 
 export const routes: Routes = [
     {
@@ -36,6 +37,11 @@ export const routes: Routes = [
         {
           path:"people",
           component:PeoplePageComponent,
+          canActivate: [AuthGuard],
+        },
+        {
+          path:"user-info",
+          component:UserInfoPageComponent,
           canActivate: [AuthGuard],
         },
         {

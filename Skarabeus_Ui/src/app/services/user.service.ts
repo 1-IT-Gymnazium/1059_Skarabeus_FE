@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UserCreate, UserDetail, UserPatch } from '../models/user.interface';
 import { PersonCreateModel } from '../models/person.interface';
+import { query } from '@angular/animations';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,22 @@ export class UserService {
     return this.httpClient.patch(url,patch)
   }
   
+  delete(id:string){
+    return this.httpClient.delete(`${this.baseUrl}/SoftDelete/${id}`)
+  }
+
+  unDelete(id:string){
+    return this.httpClient.get(`${this.baseUrl}/UndeleteUser/${id}`)
+  }
+  
+  addRole(id:string,role:string){
+    return this.httpClient.get(`${this.baseUrl}/AddRole`,{params:{userId:id,claim:role}})
+  }
+  
+  removeRole(id:string){
+    return this.httpClient.get(`${this.baseUrl}/RemoveRole`,{params:{userId:id}})
+  }
+
   generatePatch<T>(model: Partial<T>): any[] {
     const patch: any[] = [];
 

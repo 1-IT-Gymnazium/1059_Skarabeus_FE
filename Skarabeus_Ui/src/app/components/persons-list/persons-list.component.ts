@@ -1,11 +1,12 @@
 import { PersonStatus } from './../../models/person.interface';
 import { PersonService } from './../../services/person.service';
-import { Component, isStandalone } from '@angular/core';
+import { Component, inject, isStandalone } from '@angular/core';
 import { PersonCreateModel, PersonDetailModel } from '../../models/person.interface';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest } from 'rxjs';
-import { PersonEditService } from '../../services/PersonEdit.service';
+import { EditService } from '../../services/Edit.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-persons-list',
@@ -20,11 +21,15 @@ import { PersonEditService } from '../../services/PersonEdit.service';
   styleUrl: './persons-list.component.scss'
 })
 export class PersonsListComponent {
-  personService:PersonService;
+  personService=inject(PersonService);
+  editService=inject(EditService)
+  router=inject(Router)
   protected persons$;
 
   search:string = "";
   searchIngredients:string = "";
+
+  editingPersonPage = 1;
 
   activeEditModal=false
   activeCreateModal=false
@@ -34,15 +39,16 @@ export class PersonsListComponent {
   editingPerson$:PersonDetailModel;
   editingPersonBase:PersonDetailModel ;
 
-  constructor(ps:PersonService,private personEditService:PersonEditService) {
-    this.personService = ps
+  constructor() {
     this.editingPerson$ = {id:"",firstName:"",lastName:"",gender:false,active:false,status:PersonStatus.Other,deleted:false};
     this.editingPersonBase = JSON.parse(JSON.stringify(this.editingPerson$))
     this.persons$ = this.personService.persons$
   }
 
   ngOnInit() {
-    this.personEditService.editPersonId$.subscribe(x=>{if(x!=null)this.openEditModal(x!)})
+    this.editService.editPersonId$.subscribe(x=>{if(x!=null)this.openEditModal(x!)});
+    if(this.editService.openPersonCreate) this.openCreateModal();
+    this.editService.openPersonCreate = false
   }
 
   closeEditModal(){
@@ -50,6 +56,10 @@ export class PersonsListComponent {
     this.editingPersonBase = JSON.parse(JSON.stringify(this.editingPerson$))
     this.activeEditModal=false;
     this.refresh()
+    this.editService.closePersonEdit()
+    var url = this.editService.popReturnUrl()
+    console.log(url)
+    if(url) this.router.navigateByUrl(url);
   }
 
   openEditModal(id:string){
@@ -142,6 +152,8 @@ export class PersonsListComponent {
     .subscribe(
       {
         next:x=>{
+          var url = this.editService.popReturnUrl()
+          if(url) this.router.navigateByUrl(url);
           this.closeCreateModal()
         }
       })
