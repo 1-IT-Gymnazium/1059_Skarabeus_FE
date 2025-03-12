@@ -116,24 +116,29 @@
             @if(userName.invalid && userName.touched){
             is required
             }
+            <p class="float-right">
+              @if(!editingUser.emailConfirmed){
+                not
+              }
+              confirmed</p>
           </label>
           <input (blur)="onBlur('userName', userName.valid!)" class="rounded" type="text" name="userName"
             [(ngModel)]="editingUser.userName" #userName="ngModel" pattern="^(?!\s*$).+" required>
         </div>
         <!-- email -->
         <div class="flex flex-col flex-1 m-3">
-          <label [class]="userMail.invalid && userMail.touched ? 'text-red-600' : '' ">
+          <label [class]="email.invalid && email.touched ? 'text-red-600' : '' ">
             User email
-            @if(userMail.invalid && userMail.touched){
+            @if(email.invalid && email.touched){
             must be a valid email address
             }
           </label>
-          <input (blur)="onBlur('userEmail', userMail.valid!)" class="rounded" type="email" name="userMail"
-            [(ngModel)]="editingUser.email" #userMail="ngModel" required email>
+          <input (blur)="onBlur('email', email.valid!)" class="rounded" type="email" name="email"
+            [(ngModel)]="editingUser.email" #email="ngModel" required email>
         </div>
         <!-- role -->
         <div class="flex flex-col flex-1 m-3">
-          <label [class]="userMail.invalid && userMail.touched ? 'text-red-600' : '' ">
+          <label>
             User Role
           </label>
           <select class="rounded" [(ngModel)]="editingUser.role" (change)="changeRole()">

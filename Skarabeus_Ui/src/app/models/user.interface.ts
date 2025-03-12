@@ -2,6 +2,7 @@ import { PersonDetailModel } from "./person.interface";
 
 export interface UserDetail {
   deleted:boolean;
+  emailConfirmed:boolean;
   role:string;
   id: string;
   userName: string;

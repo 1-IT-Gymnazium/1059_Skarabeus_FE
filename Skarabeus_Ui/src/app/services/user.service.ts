@@ -43,7 +43,7 @@ export class UserService {
   }
   
   addRole(id:string,role:string){
-    return this.httpClient.get(`${this.baseUrl}/AddRole`,{params:{userId:id,claim:role}})
+    return this.httpClient.get(`${this.baseUrl}/AddRole`,{params:{userId:id,role:role}})
   }
   
   removeRole(id:string){
