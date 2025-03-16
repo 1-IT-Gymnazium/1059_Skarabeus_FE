@@ -1,4 +1,4 @@
-<div class="p-8 h-full">
+<div class="h-full p-8">
   <h1 class="text-xl">People</h1>
   <div class="flex flex-wrap">
     <input placeholder="search" type="text" [(ngModel)]="search"
@@ -14,7 +14,7 @@
     @for (person of persons$ | async; track person) {
     @if (normalizeString(person.firstName).indexOf(normalizeString(search)) != -1) {
     <section (click)="openEditModal(person.id)" [ngClass]="{'bg-slate-200':person.deleted}" class="person">
-      <h2 class="text-center overflow-hidden">{{ person.firstName }}</h2>
+      <h2 class="overflow-hidden text-center">{{ person.firstName }}</h2>
       <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ person.age }}</p>
     </section>
     }
@@ -26,19 +26,19 @@
   </div>
 
   @if (activeEditModal) {
-  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-10">
+  <div class="fixed inset-0 z-10 flex items-center justify-center bg-gray-800 bg-opacity-75">
     <div class="w-4/5 p-6 bg-white rounded-lg shadow-lg h-4/5">
       <div class="flex flex-row">
         <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Editing</h2>
         <button class="h-fit" (click)="closeEditModal()">x</button>
       </div>
       <div class="flex flex-row justify-center space-x-5">
-        <button class="border p-1 rounded-t-md m-1" [class]="editingPersonPage==1 ? 'bg-slate-300':'bg-slate-100'" (click)="editingPersonPage = 1">Personal Info</button>
-        <button class="border p-1 rounded-t-md m-1" [class]="editingPersonPage==2 ? 'bg-slate-300':'bg-slate-100'" (click)="editingPersonPage = 2">Mothers Info</button>
-        <button class="border p-1 rounded-t-md m-1" [class]="editingPersonPage==3 ? 'bg-slate-300':'bg-slate-100'" (click)="editingPersonPage = 3">Fathers Info</button>
+        <button class="p-1 m-1 border rounded-t-md" [class]="editingPersonPage==1 ? 'bg-slate-300':'bg-slate-100'" (click)="editingPersonPage = 1">Personal Info</button>
+        <button class="p-1 m-1 border rounded-t-md" [class]="editingPersonPage==2 ? 'bg-slate-300':'bg-slate-100'" (click)="editingPersonPage = 2">Mothers Info</button>
+        <button class="p-1 m-1 border rounded-t-md" [class]="editingPersonPage==3 ? 'bg-slate-300':'bg-slate-100'" (click)="editingPersonPage = 3">Fathers Info</button>
       </div>
       <div class="flex flex-wrap editing_inputs h_100-6">
-        
+
       @switch (editingPersonPage) {
         @default{
         <div>
@@ -47,6 +47,11 @@
             <input type="text" class="rounded" [(ngModel)]="editingPerson$.firstName" #firstName="ngModel" required
               minlength="3" (blur)="onBlur('firstName', firstName.valid!)">
             <span *ngIf="firstName.invalid && firstName.touched" class="text-red-500">Invalid name</span>
+          </div>
+
+          <div>
+            <label>nickname</label>
+            <input type="text" class="rounded" [(ngModel)]="editingPerson$.nickname" #nickname="ngModel" (blur)="update()">
           </div>
 
           <div>
@@ -157,7 +162,7 @@
       </div>
       <form #personForm="ngForm" (ngSubmit)="checkForm(personForm)" class="flex flex-col h-full inputs">
         <div class="flex flex-col flex-1 mx-1">
-          <label>First name</label>
+          <label>First name <span class="text-red-400">*</span></label>
           <input minlength="3" class="rounded" type="text" name="firstName" [(ngModel)]="CreatingPerson.firstName"
             #firstName="ngModel" required>
           @if(firstName.invalid && firstName.touched){
@@ -168,7 +173,13 @@
         </div>
 
         <div class="flex flex-col flex-1 mx-1">
-          <label>Last name</label>
+          <label>Nickname</label>
+          <input minlength="3" class="rounded" type="text" name="nickname" [(ngModel)]="CreatingPerson.nickname"
+            #nickname="ngModel">
+        </div>
+
+        <div class="flex flex-col flex-1 mx-1">
+          <label>Last name <span class="text-red-400">*</span></label>
           <input minlength="3" class="rounded" type="text" name="lastName" [(ngModel)]="CreatingPerson.lastName"
             #lastName="ngModel" required>
           @if(lastName.invalid && lastName.touched){
@@ -180,7 +191,7 @@
 
         <div class="flex flex-col justify-between md:flex-row">
           <div class="flex flex-col flex-1 my-1 md:max-w-[50%] md:my-0 mx-1">
-            <label>Gender</label>
+            <label>Gender <span class="text-red-400">*</span></label>
             <select class="rounded" name="gender" [(ngModel)]="CreatingPerson.gender" #gender="ngModel" required>
               <option [value]="true">Male</option>
               <option [value]="false">Female</option>
@@ -193,7 +204,7 @@
           </div>
 
           <div class="flex flex-col flex-1 my-1 md:max-w-[50%] md:my-0 mx-1">
-            <label>Date of birth</label>
+            <label>Date of birth <span class="text-red-400">*</span></label>
             <input class="rounded" type="date" name="dateOfBirth" [(ngModel)]="CreatingPerson.dateOfBirth"
               #dateOfBirth="ngModel" required>
             @if((dateOfBirth.invalid) && dateOfBirth.touched ){
@@ -205,7 +216,7 @@
 
         </div>
         <div class="flex flex-col flex-1 mx-1">
-          <label>Status</label>
+          <label>Status <span class="text-red-400">*</span></label>
           <select class="rounded" name="status" [(ngModel)]="CreatingPerson.status" required>
             <option [value]="'other'">Other</option>
             <option [value]="'child'">Child</option>

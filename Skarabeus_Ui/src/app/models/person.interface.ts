@@ -1,5 +1,6 @@
 export interface PersonCreateModel {
   firstName: string;
+  nickname:string;
   lastName: string;
   gender: boolean;
   dateOfBirth: string; // ISO 8601 date format
@@ -18,6 +19,7 @@ export interface PersonCreateModel {
 export interface SmallPersonDetailModel {
   id: string; // UUID as a string
   firstName: string;
+  nickname:string;
   lastName: string;
   gender: boolean;
   dateOfBirth?: string | null; // ISO 8601 format

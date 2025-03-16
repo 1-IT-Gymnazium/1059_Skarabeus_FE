@@ -34,13 +34,13 @@ export class PersonsListComponent {
   activeEditModal=false
   activeCreateModal=false
 
-  CreatingPerson:PersonCreateModel = {firstName:"",lastName:"",gender:true,active:true,dateOfBirth:new Date().toISOString(),status:PersonStatus.Other}
+  CreatingPerson:PersonCreateModel = {firstName:"",lastName:"",gender:true,active:true,dateOfBirth:new Date().toISOString(),status:PersonStatus.Other,nickname:""}
 
   editingPerson$:PersonDetailModel;
   editingPersonBase:PersonDetailModel ;
 
   constructor() {
-    this.editingPerson$ = {id:"",firstName:"",lastName:"",gender:false,active:false,status:PersonStatus.Other,deleted:false};
+    this.editingPerson$ = {id:"",firstName:"",lastName:"",gender:false,active:false,status:PersonStatus.Other,deleted:false,nickname:""};
     this.editingPersonBase = JSON.parse(JSON.stringify(this.editingPerson$))
     this.persons$ = this.personService.persons$
   }
@@ -52,7 +52,7 @@ export class PersonsListComponent {
   }
 
   closeEditModal(){
-    this.editingPerson$ = {id:"",firstName:"",lastName:"",gender:false,active:false,status:PersonStatus.Other,deleted:false};
+    this.editingPerson$ = {id:"",firstName:"",lastName:"",gender:false,active:false,status:PersonStatus.Other,deleted:false,nickname:""};
     this.editingPersonBase = JSON.parse(JSON.stringify(this.editingPerson$))
     this.activeEditModal=false;
     this.refresh()
@@ -70,7 +70,7 @@ export class PersonsListComponent {
   }
 
   closeCreateModal(){
-    this.CreatingPerson = {firstName:"",lastName:"",gender:true,active:true,dateOfBirth:new Date().toISOString(),status:PersonStatus.Other};
+    this.CreatingPerson = {firstName:"",lastName:"",gender:true,active:true,dateOfBirth:new Date().toISOString(),status:PersonStatus.Other,nickname:""};
     this.activeCreateModal=false;
     this.refresh()
   }
@@ -97,6 +97,9 @@ export class PersonsListComponent {
 
   update() {
     const patch:Partial<PersonCreateModel>={};
+
+    console.log(this.editingPerson$,this.editingPersonBase)
+
     Object.keys(this.editingPersonBase).forEach(
       x =>
         {
