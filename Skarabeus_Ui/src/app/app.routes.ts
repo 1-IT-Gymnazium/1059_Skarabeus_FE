@@ -10,46 +10,47 @@ import { AuthGuard } from './guards/auth.guard';
 import { UserInfoPageComponent } from './pages/user-info-page/user-info-page.component';
 
 export const routes: Routes = [
-    {
-      path: '',
-      component: DefaultComponent,
-      children: [
-        { 
-          path: 'login', 
-          component: LoginPageComponent, 
-          title: 'Login' 
-        },
-        { 
-          path: '', 
-          component: HomePageComponent, 
-          title: 'Home',
-        },
-        {
-          path:'food',
-          component:FoodPageComponent,
-          canActivate: [AuthGuard],
-        },
-        {
-          path:"events",
-          component:EventListComponent,
-          canActivate: [AuthGuard],
-        },
-        {
-          path:"people",
-          component:PeoplePageComponent,
-          canActivate: [AuthGuard],
-        },
-        {
-          path:"user-info",
-          component:UserInfoPageComponent,
-          canActivate: [AuthGuard],
-        },
-        {
-          path: 'not-found',
-          component: NotFoundPageComponent,
-          title: 'Not Found ',
-        }
-      ],
-    },
-    { path: '**', redirectTo: '/not-found' },
-  ];
+  {
+    path: '',
+    component: DefaultComponent,
+    children: [
+      {
+        path: '',
+        component: HomePageComponent,
+        title: 'Home',
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'food',
+        component: FoodPageComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "events",
+        component: EventListComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "people",
+        component: PeoplePageComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "user-info",
+        component: UserInfoPageComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'not-found',
+        component: NotFoundPageComponent,
+        title: 'Not Found ',
+      }
+    ],
+  },
+  {
+    path: 'login',
+    component: LoginPageComponent,
+    title: 'Login',
+  },
+  { path: '**', redirectTo: '/not-found' },
+];

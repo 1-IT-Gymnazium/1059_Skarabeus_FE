@@ -37,6 +37,7 @@ export class EventListComponent {
 
   activeCreateModal=false
   activeEditModal=false
+  editTab = 1;
 
   constructor() {
 
