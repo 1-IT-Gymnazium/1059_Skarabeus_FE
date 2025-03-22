@@ -4,12 +4,13 @@
 
 ::-webkit-scrollbar {
     width: 0.5rem;
+    height: 0.5rem;
   }
 ::-webkit-scrollbar-corner {
   display: none;
 }
 ::-webkit-scrollbar-thumb {
-    @apply bg-slate-400;
+  background-color: var(--sandstone-dark);
     border-radius: 8px;
     background-clip: padding-box;
   }
@@ -28,38 +29,52 @@ input[type="number"]::-webkit-inner-spin-button {
   height: calc(100% - 4rem);
 }
 
-
 .h_100-2\.5{
   height: calc(100% - 2.5rem);
+}
+
+.h_100-1\.75{
+  height: calc(100% - 1.75rem);
 }
 
 .h_100-1{
   height: calc(100% - 1rem);
 }
 
-h2{
-  @apply flex justify-center content-center
+.header{
+  @apply text-2xl font-semibold
 }
 
-input{
-  @apply border rounded
+h2{
+  @apply flex justify-start content-center flex-wrap
 }
+
+input,select,textarea{
+  @apply border rounded ;
+  --tw-ring-color:var(--accent-green) !important; /* Change the focus ring color */
+}
+
 input[type="number"]{
-  @apply border rounded border-gray-400;
+  @apply border rounded border-[var(--light-parchment)];
 
 }
 
 :root{
   --primary-dark-blue: #1A3A5B;
-  --night-blue: #1C3D5A;         
+  --night-blue: #1C3D5A;  
+
   --primary-white: #FFFFFF;
   --primary-gray: #F2F2F2;
+
   --accent-orange: #F5A623;
+  --gold: #D4A537;      
+  --sandstone-beige: #E5C99D;  
+  --sandstone-dark: #b99761;   
+  --light-parchment: #F8F5E4;  
+
   --accent-green: #7ED321;
-  --dark-green: #2C5E2E;  
-  --gold: #D4A537;        
-  --sandstone-beige: #E5C99D;   
-  --light-parchment: #F8F5E4;    
+  --action-green: #2a932d;  
+  --dark-green: #154717;      
 
   --primary-light-blue: #4A90E2;
 }

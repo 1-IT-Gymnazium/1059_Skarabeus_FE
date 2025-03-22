@@ -8,6 +8,8 @@ import { FoodPageComponent } from './pages/food-page/food-page.component';
 import { PeoplePageComponent } from './pages/people-page/people-page.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UserInfoPageComponent } from './pages/user-info-page/user-info-page.component';
+import { ValidateEmailPageComponent } from './pages/validate-email-page/validate-email-page.component';
+import { ChangePasswordPageComponent } from './pages/change-password-page/change-password-page.component';
 
 export const routes: Routes = [
   {
@@ -44,6 +46,21 @@ export const routes: Routes = [
         path: 'not-found',
         component: NotFoundPageComponent,
         title: 'Not Found ',
+      },
+      {
+        path:'auth',
+        children:[
+          {
+            path: 'validate-email',
+            component: ValidateEmailPageComponent,
+            title: 'validate-email',
+          },
+          {
+            path: 'change-password',
+            component: ChangePasswordPageComponent,
+            title: 'change-password',
+          }
+        ]
       }
     ],
   },

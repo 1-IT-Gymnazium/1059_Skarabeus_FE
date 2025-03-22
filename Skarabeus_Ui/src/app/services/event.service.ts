@@ -28,8 +28,12 @@ export class EventService {
     })
   }
 
+  delete(id:string){
+    return this.httpClient.delete(`${this.baseUrl}/${id}`)
+  }
+
   create(model:EventCreateModel){
-    return this.httpClient.post(`${this.baseUrl}`,model)
+    return this.httpClient.post<EventDetailModel>(`${this.baseUrl}`,model)
   }
 
   Patch(id:string,model:Partial<EventCreateModel>){

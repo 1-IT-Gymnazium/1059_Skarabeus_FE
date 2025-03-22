@@ -20,4 +20,5 @@ export interface EventDetailModel {
   place: string;
   start: string; // ISO 8601 date-time format
   end: string; // ISO 8601 date-time format
+  rowInGrid?:number|null;
 }

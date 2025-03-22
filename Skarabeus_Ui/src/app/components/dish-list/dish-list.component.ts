@@ -5,7 +5,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { DishService } from '../../services/dish.service';
 import { IngredientService } from '../../services/ingredient.service';
-import { IngredientDetail } from '../../models/ingredient/ingredient-detail.interface';
+import { IngredientDetail } from '../../models/ingredient.interface';
 import { EditService } from '../../services/Edit.service';
 import { Router } from '@angular/router';
 
@@ -36,8 +36,9 @@ export class DishListComponent {
   search:string = "";
   searchIngredients:string = "";
 
-  activeModal=false
-  activeCreateModal = false
+  activeModal = false;
+  activeCreateModal = false;
+  lastCreateError$:any;
 
   editingIngredients:string[]=[];
 
@@ -84,6 +85,7 @@ export class DishListComponent {
   closeCreateModal(){
     this.creatingDish = {} as DishCreate
     this.activeCreateModal = false
+    this.lastCreateError$ = null
   }
 
   openModal(){
@@ -142,10 +144,24 @@ export class DishListComponent {
 
 
   create(): void {
-    this.dishService.CreateDish(this.creatingDish).subscribe(x=>this.refresh())
-    var url = this.editService.popReturnUrl()
-    if(url) this.router.navigateByUrl(url);
-    this.closeCreateModal()
+    this.dishService.CreateDish(this.creatingDish).subscribe(
+      {
+        next: x => {
+          this.refresh()
+          var url = this.editService.popReturnUrl()
+          this.closeCreateModal()
+          if(url) {
+            this.router.navigateByUrl(url);
+          }
+          else{
+            this.openEditModal(x.id)
+          }
+        },
+        error: err =>{
+          this.lastCreateError$ = err.error
+        }
+      }
+    );
   }
 
   normalizeString(ob:string){

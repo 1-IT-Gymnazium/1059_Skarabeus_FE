@@ -1,12 +1,12 @@
 <div class="p-8 h_100-4 space-y-2">
-  <h1 class="text-xl">Events</h1>
+  <h1 class="header">Events</h1>
   <div class="flex flex-wrap items-center">
     <input placeholder="search" type="text" [(ngModel)]="search"
-      class="w-1/2 p-2 border rounded sm:w-1/4 md:w-1/5 xl:w-1/6" />
+      class="w-64 p-2 border rounded" />
     @if(search!=""){
     <button (click)="search = ''" class="ml-2 rounded-md">x</button>
     }
-    <button (click)="openCreateModal()" class="w-10 h-10 ml-2 bg-blue-500 rounded-md">
+    <button (click)="openCreateModal()" class="w-10 h-10 ml-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md">
       <b>+</b>
     </button>
   </div>
@@ -26,6 +26,7 @@
     Žádná data 😦
     }
   </div>
+</div>
 
   @if (activeCreateModal) {
   <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
@@ -204,11 +205,11 @@
                   @if(searchPersons != ''){
                   <button (click)="searchPersons = ''" class="ml-2 rounded-md">x</button>
                   }
-                  <button (click)="createPerson()" class="w-10 h-10 ml-2 bg-blue-500 rounded-md">
+                  <button (click)="createPerson()" class="w-10 h-10 ml-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md">
                     <b>+</b>
                   </button>
                 </div>
-                <div class="flex w-full flex-wrap overflow-scroll h_100-2.5">
+                <div class="select-item-wraper h_100-2.5">
 
                   @for (person of editingEvent$.participants; track person.id) {
                       @if (normalizeString(person.firstName + ' ' + person.lastName).indexOf(normalizeString(searchPersons)) != -1) {
@@ -222,7 +223,7 @@
                     }
                   @if (!((persons$ | async)?.length == 0)) {
                     @for (person of persons$ | async; track person.id) {
-                      @if (normalizeString(person.firstName + ' ' + person.lastName).indexOf(normalizeString(searchPersons)) != -1) {
+                      @if (normalizeString(person | person:"fullName").indexOf(normalizeString(searchPersons)) != -1) {
                         @if(EditingEventContainsPerson(person.id) == undefined){
                           <section class="bg-slate-300 select-item">
                             <h2 class="flex-1 overflow-hidden max-w-8/12" (click)="addPersonToEvent(person.id)">{{ person.firstName }}
@@ -246,11 +247,11 @@
                   @if(searchDishes != ''){
                   <button (click)="searchDishes = ''" class="ml-2 rounded-md">x</button>
                   }
-                  <button (click)="createFood()" class="w-10 h-10 ml-2 bg-blue-500 rounded-md">
+                  <button (click)="createFood()" class="w-10 h-10 ml-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md">
                     <b>+</b>
                   </button>
                 </div>
-                <div class="flex w-full flex-wrap overflow-scroll h_100-2.5">
+                <div class="select-item-wraper h_100-2.5">
 
                   @for (food of editingEvent$.dishes; track food.id) {
                       @if (normalizeString(food.name).indexOf(normalizeString(searchDishes)) != -1) {
@@ -286,5 +287,3 @@
     </div>
   </div>
   }
-
-</div>

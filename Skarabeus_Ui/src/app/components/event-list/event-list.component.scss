@@ -38,8 +38,12 @@
   @apply w-full
 }
 
+.select-item-wraper{
+  @apply flex w-full flex-col space-y-5 flex-wrap overflow-scroll
+}
+
 .select-item {
-  @apply border p-2 shadow mb-5 mx-10 min-h-12 h-12 flex flex-row rounded-lg;
+  @apply border p-2 shadow mx-10 min-h-12 h-12 flex flex-row rounded-lg;
   width: calc(100% - 5rem);
 }
 
@@ -61,5 +65,5 @@
 
 .navigation {
   display: none;
-  @apply items-center justify-center h-full p-1 bg-blue-500 w-fit
+  @apply items-center justify-center h-full p-1 bg-[var(--action-green)] hover:bg-[var(--accent-green)] w-fit
 }

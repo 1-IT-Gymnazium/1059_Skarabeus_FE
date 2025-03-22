@@ -24,7 +24,7 @@ export class PersonsListComponent {
   personService=inject(PersonService);
   editService=inject(EditService)
   router=inject(Router)
-  protected persons$;
+  protected persons$= this.personService.persons$;
 
   search:string = "";
   searchIngredients:string = "";
@@ -34,15 +34,12 @@ export class PersonsListComponent {
   activeEditModal=false
   activeCreateModal=false
 
-  CreatingPerson:PersonCreateModel = {firstName:"",lastName:"",gender:true,active:true,dateOfBirth:new Date().toISOString(),status:PersonStatus.Other,nickname:""}
+  CreatingPerson:PersonCreateModel = {gender:true,status:'other'} as PersonCreateModel;
 
-  editingPerson$:PersonDetailModel;
-  editingPersonBase:PersonDetailModel ;
+  editingPerson$:PersonDetailModel = {} as PersonDetailModel;
+  editingPersonBase:PersonDetailModel  = JSON.parse(JSON.stringify(this.editingPerson$));
 
-  constructor() {
-    this.editingPerson$ = {id:"",firstName:"",lastName:"",gender:false,active:false,status:PersonStatus.Other,deleted:false,nickname:""};
-    this.editingPersonBase = JSON.parse(JSON.stringify(this.editingPerson$))
-    this.persons$ = this.personService.persons$
+  constructor() { 
   }
 
   ngOnInit() {
@@ -52,7 +49,7 @@ export class PersonsListComponent {
   }
 
   closeEditModal(){
-    this.editingPerson$ = {id:"",firstName:"",lastName:"",gender:false,active:false,status:PersonStatus.Other,deleted:false,nickname:""};
+    this.editingPerson$= {} as PersonDetailModel
     this.editingPersonBase = JSON.parse(JSON.stringify(this.editingPerson$))
     this.activeEditModal=false;
     this.refresh()
@@ -70,7 +67,7 @@ export class PersonsListComponent {
   }
 
   closeCreateModal(){
-    this.CreatingPerson = {firstName:"",lastName:"",gender:true,active:true,dateOfBirth:new Date().toISOString(),status:PersonStatus.Other,nickname:""};
+    this.CreatingPerson = {gender:true,status:'other'} as PersonCreateModel
     this.activeCreateModal=false;
     this.refresh()
   }

@@ -6,14 +6,22 @@ import { PersonCreateModel } from '../models/person.interface';
   providedIn: 'root'
 })
 export class EditService {
+  calendarMonth:number=new Date().getMonth();
+  calendarYear:number=new Date().getFullYear();
+
   private editPersonId= new BehaviorSubject<string | null>(null);
   editPersonId$ = this.editPersonId.asObservable();
+
   private editEventId= new BehaviorSubject<string | null>(null);
   EditEventId$ = this.editEventId.asObservable();
+
   private EditDishId= new BehaviorSubject<string | null>(null);
   EditDishId$ = this.EditDishId.asObservable();
+
   private returnUrl:any;
+  
   openPersonCreate = false
+  openEventCreate = false
   openDishCreate = false
 
   openPersonEditModal(personId: string, url:string) {
@@ -26,7 +34,8 @@ export class EditService {
     this.EditDishId.next(dishId);
   }
 
-  storeEventEditModal(eventId: string) {
+  openEventEditModal(eventId: string, url:string) {
+    this.returnUrl = url    
     this.editEventId.next(eventId);
   }
 
@@ -49,6 +58,11 @@ export class EditService {
   
   openDishCreateModal(url:string){
     this.openDishCreate = true
+    this.returnUrl = url
+  }
+
+  openEventCreateModal(url:string){
+    this.openEventCreate = true
     this.returnUrl = url
   }
 

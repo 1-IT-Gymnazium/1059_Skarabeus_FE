@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, generate, Observable, ReplaySubject } from 'rxjs';
-import { IngredientDetail } from '../models/ingredient/ingredient-detail.interface';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { IngredientCreate } from '../models/ingredient/ingredient-create.interface';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { IngredientCreate, IngredientDetail } from '../models/ingredient.interface';
 
 @Injectable({
   providedIn: 'root'

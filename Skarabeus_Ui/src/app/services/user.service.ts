@@ -65,4 +65,8 @@ export class UserService {
 
     return patch;
   }
+
+  changePassword(email:string){
+    return this.httpClient.get(`${this.baseUrl}/ChangePassword/${email}`)
+  }
 }

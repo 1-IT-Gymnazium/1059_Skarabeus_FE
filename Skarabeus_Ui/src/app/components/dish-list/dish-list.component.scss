@@ -35,7 +35,7 @@
 
 .navigation{
   display: none;
-  @apply items-center justify-center h-full p-1 bg-blue-500 w-fit
+  @apply items-center justify-center h-full p-1 bg-[var(--action-green)] hover:bg-[var(--accent-green)]  w-fit
 }
 
 .ingredient:hover .price{
@@ -47,7 +47,7 @@
 }
 
 .ingredient button{
-    @apply border text-center rounded-md
+    @apply text-center rounded-md
 }
 .ingredient>
 h2,.ingredient>button,.ingredient>div{

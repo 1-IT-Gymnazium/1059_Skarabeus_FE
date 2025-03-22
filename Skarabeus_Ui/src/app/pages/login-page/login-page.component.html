@@ -1,29 +1,65 @@
-<section class="grid items-center text-Black">
-  <div class="my-4 items-center">
-  <h2 class="text-2xl font-bold text-center text-black">Login</h2>
-</div>
-<div>
-  @if (lastError$ != null) {
-    <h2 class="bg-red-600 text-red-950">
-        {{lastError$}}
-    </h2>
-  }
-  <form class="max-w-sm mx-auto" [formGroup]="formular" (ngSubmit)="onSubmit()">
-      <div class="mb-5">
-        <label for="email" class="block mb-2 text-sm font-medium">Your email</label>
-        <input type="email" id="email" formControlName="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5   dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@flowbite.com" required />
+<section class="flex flex-col justify-center items-center text-Black h-full">
+  <div class="border-2 p-10 rounded-3xl w-96 h-[26rem] space-y-6 shadow-md">
+    @if(!resetingPassword){
+      <div class="items-center flex justify-between">
+        <h2 class="text-2xl font-bold text-center text-blck">Login</h2>
+        @if(authService.userInfoModel$|async;){
+          <a class="text-md font-bold text-center items-center flex text-blck" [routerLink]="['']">logged in 
+            <svg class="w-7 h-7 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/>
+            </svg>
+          </a>
+        }
       </div>
-      <div class="mb-5">
-        <label for="password" class="block mb-2 text-sm font-medium">Your password</label>
-        <input type="password" id="password" formControlName="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5   dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+      <div class=" h-[calc(100%-3rem)] ">
+        @if (lastError$ != null) {
+          <h2 class="text-red-600 font-bold">
+            {{lastError$?.errors["error"]}}
+          </h2>
+        }
+        <form class="max-w-sm mx-auto space-y-4 flex items-stretch h_100-1.75 justify-between flex-col" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="">
+            <label for="email" [class]="lastError$ != null ? 'text-red-600':''" class="block mb-2 text-sm font-medium">Your email
+              @if(lastError$?.errors["Email"] != null){
+                is required and needs to be a valid email address
+              }
+            </label>
+            <input type="email" id="email" formControlName="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" placeholder="name@flowbite.com" required />
+          </div>
+          <div class="">
+            <label for="password"  [class]="lastError$ != null ? 'text-red-600':''" class="block mb-2 text-sm font-medium">Your password
+              @if(lastError$?.errors.Password != null){
+                is required
+              }
+            </label>
+            <input type="password" id="password" formControlName="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required />
+          </div>
+          <button type="submit" class="text-white bg-[var(--action-green)] hover:bg-[var(--accent-green)] font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Login</button>
+          </form>
+          <a class="cursor-pointer underline text-[var(--action-green)] hover:text-[var(--accent-green)] w-fit" (click)="toggleToResetPassword()">Reset Password</a>
+        
       </div>
-      <div class="flex items-start mb-5">
-        <div class="flex items-center h-5">
-          <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" required />
-        </div>
-        <label for="remember" class="ms-2 text-sm font-medium">Remember me</label>
+    }
+    @else {
+      <div class="items-center">
+        <h2 class="text-2xl font-bold text-center text-black">Reset password</h2>
       </div>
-      <button type="submit" class="text-white bg-purple-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-purple-400  dark:hover:bg-blue-700 dark:focus:ring-blue-800">Přihlásit se</button>
-    </form>
+        <form class="max-w-sm mx-auto space-y-4 flex justify-center items-stretch h_100-4 flex-col" [formGroup]="resetForm" (ngSubmit)="resetPassword()">
+          
+          @if(sentReset){
+            <h2>Reset email sent, try checking your inbox and if you can't find it, check spelling and try again or conntact support</h2>
+          }
+          <div class="">
+            <label for="resetEmail" [class]="lastError$ != null ? 'text-red-600':''" class="block mb-2 text-sm font-medium">Your email
+              @if(lastError$?.errors["Email"] != null){
+                is required and needs to be a valid email address
+              }
+            </label>
+            <input type="email" id="resetEmail" formControlName="resetEmail" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" placeholder="name@flowbite.com" required />
+          </div>
+          <button type="submit" class="text-white bg-[var(--action-green)] hover:bg-[var(--accent-green)] font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">reset</button>
+          <a class="cursor-pointer underline text-[var(--action-green)] hover:text-[var(--accent-green)]" (click)="toggleToResetPassword()">Back</a>
+        </form>
+      }
   </div>
 </section>

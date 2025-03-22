@@ -1,4 +1,4 @@
-import { LoginModel } from '../models/users/login.interface';
+import { LoginModel, PasswordResetModel, TokenModel } from '../models/auth.interface';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -23,8 +23,14 @@ export class AuthService {
   login(data: LoginModel): Observable<any> {
     return this.httpClient.post<any>(`${this.baseUrl}/Login`, data).pipe(
       tap((response) => {
-        this.router.navigate(['/home']);
-        this.userInfo();
+        this.httpClient
+        .get<UserDetail>(`${this.baseUrl}`,{})
+        .subscribe({
+          next:(x)=>{
+            this.userInfoModel.next(x)
+            this.router.navigate(['/']);
+          }
+        })
         return response;
       })
     );
@@ -34,14 +40,14 @@ export class AuthService {
     this.httpClient
       .post(`${this.baseUrl}/Logout`, {})
       .subscribe((res) => {
-        this.router.navigate(['/login']);
         this.userInfo()
+        this.router.navigate(['/login']);
         return res;
       });
   }
 
-  userInfo(): void{
-    this.httpClient
+  userInfo(){
+    return this.httpClient
     .get<UserDetail>(`${this.baseUrl}`,{})
     .subscribe({
       next:(x)=>{
@@ -51,5 +57,13 @@ export class AuthService {
         this.userInfoModel.next(null);
       }
     });
+  }
+
+  validateEmail(model:TokenModel){
+    return this.httpClient.post(`${this.baseUrl}/validateEmail`,model)
+  }
+
+  changePassword(model:PasswordResetModel){
+    return this.httpClient.post(`${this.baseUrl}/ChangePassword`,model)
   }
 }

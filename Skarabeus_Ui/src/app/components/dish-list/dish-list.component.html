@@ -1,11 +1,11 @@
 <div class="p-8 h_100-4 space-y-2">
-  <h1 class="text-xl">Dishes</h1>
+  <h1 class="header">Dishes</h1>
   <div class="flex flex-wrap items-center">
-    <input placeholder="search" type="text" [(ngModel)]="search" class="w-1/2 p-2 border rounded sm:w-1/4 md:w-1/5 xl:w-1/6" />
+    <input placeholder="search" type="text" [(ngModel)]="search" class="w-64 p-2 border rounded" />
     @if(search != "") {
       <button (click)="search = ''" class="ml-2 rounded-md">x</button>
     }
-    <button (click)="openCreateModal()" class="w-10 h-10 ml-2 bg-blue-500 rounded-md">
+    <button (click)="openCreateModal()" class="w-10 h-10 ml-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md">
       <b>+</b>
     </button>
   </div>
@@ -25,6 +25,7 @@
       Žádná data 😦
     }
   </div>
+</div>
 
 
   @if (activeModal) {
@@ -40,7 +41,7 @@
             <label class="block text-sm text-gray-600">Name</label>
             <div class="flex flex-row mb-3 ">
               <input type="text" [(ngModel)]="editingDish$.name" (blur)="update()" class="w-full p-2 border rounded" />
-              <button (click)="remove()" class="p-2 ml-2 bg-red-700 rounded-md">Delete</button>
+              <button (click)="remove()" class="p-2 ml-2 bg-red-600 hover:bg-[red] rounded-md">Delete</button>
             </div>
 
             <label class="block text-sm text-gray-600">Description</label>
@@ -57,7 +58,7 @@
                 class="flex-1 border rounded"
               />
               <button *ngIf="searchIngredients != ''" (click)="searchIngredients = ''" class="ml-2 rounded-md">x</button>
-              <button (click)="createIngredient()" class="w-10 h-10 ml-2 bg-blue-500 rounded-md mr-2.5">
+              <button (click)="createIngredient()" class="w-10 h-10 ml-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md mr-2.5">
                 <b>+</b>
               </button>
             </div>
@@ -92,8 +93,8 @@
                         <input title="name" class="flex-1 p-2 mr-2" [(ngModel)]="ingredient.name">
                         <input title="price for standard unit (kg,l)" class="w-2/12" type="number" [(ngModel)]="ingredient.priceForUnit">
                         <div class="w-fit">
-                          <button (click)="updateIngredientFromDish(ingredient)" class="h-full px-2 bg-blue-500 w-fit">Done</button>
-                          <button (click)="removeIngredient(ingredient.ingredientId)" class="h-full px-2 bg-red-600 w-fit">Delete</button>
+                          <button (click)="updateIngredientFromDish(ingredient)" class="h-full px-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] w-fit">Done</button>
+                          <button (click)="removeIngredient(ingredient.ingredientId)" class="h-full px-2 bg-red-600 hover:bg-[red] w-fit">Delete</button>
                         </div>
                       }
                     </section>
@@ -117,8 +118,8 @@
                         <input title="name" class="flex-1 p-2 mr-2 " [(ngModel)]="ingredient.name">
                         <input title="price for standard unit (kg,l)" class="w-2/12" type="number" [(ngModel)]="ingredient.priceForUnit">
                         <div class="w-fit">
-                          <button (click)="updateIngredient(ingredient)" class="h-full px-2 bg-blue-500 w-fit" >Done</button>
-                          <button (click)="removeIngredient(ingredient.id)" class="h-full px-2 bg-red-600 w-fit">Delete</button>
+                          <button (click)="updateIngredient(ingredient)" class="h-full px-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] w-fit" >Done</button>
+                          <button (click)="removeIngredient(ingredient.id)" class="h-full px-2 bg-red-600 hover:bg-[red] w-fit">Delete</button>
                         </div>
                       }
                       </section>
@@ -144,22 +145,30 @@
           <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Creating</h2>
           <button class="h-fit" (click)="closeCreateModal()">x</button>
         </div>
-        <form #dishForm="ngForm" (ngSubmit)="checkForm(dishForm)" class="flex flex-col h-full inputs">
+        <form #dishForm="ngForm" (ngSubmit)="checkForm(dishForm)" class="flex flex-col space-y-2 h-full inputs">
+          @if(lastCreateError$ != null){
+            <h2 class="text-red-600 font-bold">
+              {{lastCreateError$?.errors["Name"]}}
+            </h2>
+          }
           <div class="flex flex-col flex-1 mx-1">
-            <label>Name</label>
+            <label  [class]="name.invalid && name.touched?'text-red-600':''">Name
+              @if(name.invalid && name.touched){
+                can not be empty
+              }
+              @else{
+                <span class="text-red-400">*</span>
+              }
+            </label>
             <input
               minlength="1"
               class="rounded"
               type="text"
-              name="firstName"
+              name="name"
               [(ngModel)]="creatingDish.name"
-              #firstName="ngModel"
+              #name="ngModel"
               required>
-              @if(firstName.invalid && firstName.touched){
-                <p class="text-red-500">
-                  First name can not be empty
-                </p>
-              }
+              
           </div>
 
           <div class="flex flex-col flex-1 mx-1">
@@ -168,8 +177,7 @@
               class="rounded"
               type="text"
               name="description"
-              [(ngModel)]="creatingDish.description"
-              required>
+              [(ngModel)]="creatingDish.description">
           </div>
           <div class="flex justify-center m-2">
             <button
@@ -183,4 +191,3 @@
       </div>
     </div>
   }
-</div>

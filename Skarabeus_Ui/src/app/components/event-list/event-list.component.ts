@@ -7,11 +7,12 @@ import { PersonService } from '../../services/person.service';
 import { DishService } from '../../services/dish.service';
 import { EditService } from '../../services/Edit.service';
 import { Router } from '@angular/router';
+import { PersonPipe } from '../../pipes/person.pipe';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [FormsModule,AsyncPipe],
+  imports: [FormsModule,AsyncPipe,PersonPipe],
   templateUrl: './event-list.component.html',
   styleUrl: './event-list.component.scss'
 })
@@ -35,7 +36,7 @@ export class EventListComponent {
   editingEvent$:EventDetailModel = {} as EventDetailModel;
   editingEventBase:EventDetailModel = {} as EventDetailModel;
 
-  activeCreateModal=false
+  activeCreateModal=this.editService.openEventCreate
   activeEditModal=false
   editTab = 1;
 
@@ -43,7 +44,8 @@ export class EventListComponent {
 
   }
   ngOnInit(){
-    this.editService.EditEventId$.subscribe(x=>{if(x!=null)this.openEditModal(x!)})
+    this.editService.EditEventId$.subscribe(x=>{if(x!=null)this.openEditModalLogic(x)})
+    if(this.editService.openEventCreate) this.openCreateModal();
   }
 
   refresh(){
@@ -59,6 +61,8 @@ export class EventListComponent {
   }
 
   closeCreateModal(){
+    var url = this.editService.popReturnUrl()
+    if(url) this.router.navigateByUrl(url);
     this.activeCreateModal = false
   }
 
@@ -80,14 +84,17 @@ export class EventListComponent {
     }
   }
 
-
   openEditModal(id:string){
+    this.editService.openEventEditModal(id,this.router.url)
+  }
+
+  openEditModalLogic(id:string){
     this.events$.subscribe(
       x => 
         {
           console.log(x);
           this.editingEvent$ = x.find(y => y.id == id)!
-  });
+    });
     this.editingEventBase = JSON.parse(JSON.stringify(this.editingEvent$))
     this.activeEditModal = true
     this.refresh()
@@ -99,11 +106,18 @@ export class EventListComponent {
     this.activeEditModal=false;
     this.refresh()
     this.editService.closeEventEdit()
+    var url = this.editService.popReturnUrl()
+    if(url) this.router.navigateByUrl(url);
   }
   
 
   deleteEvent(){
-
+    this.eventService.delete(this.editingEvent$.id).subscribe(
+      x => {
+        this.refresh()
+        this.closeEditModal()
+      }
+    )
   }
 
 
@@ -139,29 +153,27 @@ export class EventListComponent {
 
   createFood(){
     this.editService.openDishCreateModal(this.router.url)
-    this.editService.storeEventEditModal(this.editingEvent$.id)
     this.router.navigate(['/food'])
   }
 
   editFood(foodId:string){
     this.editService.openDishEditModal(foodId, this.router.url)
-    this.editService.storeEventEditModal(this.editingEvent$.id);
     this.router.navigate(['/food']);
   }
 
   addFoodToEvent(foodId:string){
-
+    this.eventService.addDishToEvent(this.editingEvent$.id,foodId).subscribe((x)=>{
+      this.refresh()
+    })
   }
 
   createPerson(){
     this.editService.openPersonCreateModal(this.router.url)
-    this.editService.storeEventEditModal(this.editingEvent$.id)
     this.router.navigate(['/people'])
   }
 
   editPerson(personId:string){
     this.editService.openPersonEditModal(personId, this.router.url)
-    this.editService.storeEventEditModal(this.editingEvent$.id);
     this.router.navigate(['/people']);
   }
 

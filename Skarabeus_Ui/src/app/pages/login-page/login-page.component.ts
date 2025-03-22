@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login-page',
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     ReactiveFormsModule,
   ],
   templateUrl: './login-page.component.html',
@@ -19,28 +21,55 @@ export class LoginPageComponent {
   protected readonly fb = inject(FormBuilder);
 
   protected readonly authService = inject(AuthService);
+  protected readonly userService = inject(UserService);
 
   protected readonly router = inject(Router);
 
   protected lastError$:any;
+  protected sentReset=false;
 
-  protected formular = this.fb.group({
+  resetingPassword = false;
+
+  protected loginForm = this.fb.group({
     email: new FormControl('', { nonNullable: true}),
     password: new FormControl('', { nonNullable: true})
   });
+  
+  protected resetForm = this.fb.group({
+    resetEmail: new FormControl('', { nonNullable: true})
+  });
 
   onSubmit(): void {
-    const data = this.formular.getRawValue();
+    const data = this.loginForm.getRawValue();
 
     this.authService.login(data).subscribe({
-      next: async () => {
+      next: () => {
         this.lastError$ = null
-          await this.router.navigate(['/']);
       },
       error: (error) => {
-        console.log(error.error)
-        this.lastError$ = error.error.title
+        this.lastError$ = error.error
+        console.log(this.lastError$)
       }
     });
+  }
+
+  toggleToResetPassword(){
+    this.resetingPassword = !this.resetingPassword;
+  }
+
+  resetPassword():void{
+    this.userService.changePassword(this.resetForm.getRawValue().resetEmail)
+    .subscribe(
+      {
+        next: (x) => {
+          this.lastError$ = null
+          this.sentReset=true          
+        },
+        error: (error) => {
+          this.lastError$ = error
+          console.log(this.lastError$)
+        }
+      }
+    )
   }
 }
