@@ -19,12 +19,12 @@ jobs:
           node-version: 18  # Adjust if needed
 
       - name: Install dependencies
-        run: 
+        run: |
           cd ./Skarabeus_Ui
-          npm install  # Ensures clean install
+          npm install 
 
       - name: Generate documentation
-        run:
+        run: |
           cd ./Skarabeus_Ui
           npx compodoc -p tsconfig.compodoc.json -d docs --silent
 
