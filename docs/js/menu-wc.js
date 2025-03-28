@@ -15,7 +15,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
         <nav>
             <ul class="list">
                 <li class="title">
-                    <a href="index.html" data-type="index-link">skarabeus_ui documentation</a>
+                    <a href="index.html" data-type="index-link">
+                        <img alt="" class="img-responsive" data-type="custom-logo" data-src="images/skarabeus_logo_small.png">
+                    </a>
                 </li>
 
                 <li class="divider"></li>
@@ -236,9 +238,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="miscellaneous/variables.html" data-type="entity-link">Variables</a>
                             </li>
                         </ul>
-                    </li>
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="coverage.html"><span class="icon ion-ios-stats"></span>Documentation coverage</a>
                     </li>
                     <li class="divider"></li>
                     <li class="copyright">

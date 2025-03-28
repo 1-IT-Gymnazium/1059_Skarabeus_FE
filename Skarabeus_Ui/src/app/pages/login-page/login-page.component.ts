@@ -52,7 +52,7 @@ export class LoginPageComponent {
       }
     });
   }
-
+  
   toggleToResetPassword(){
     this.resetingPassword = !this.resetingPassword;
   }
