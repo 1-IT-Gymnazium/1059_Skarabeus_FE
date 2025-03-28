@@ -12,7 +12,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
+      
+      - name: go to source directory
+        run: cd ./Skarabeus_Ui
+        
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
