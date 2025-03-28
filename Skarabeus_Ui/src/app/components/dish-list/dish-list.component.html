@@ -63,7 +63,7 @@
               </button>
             </div>
 
-            <div class="flex flex-col w-full overflow-y-scroll h_100-1">
+            <div class="flex flex-col w-full overflow-y-scroll space-y-4 h_100-1">
               @if (!((ingredients$ | async)?.length == 0)) {
                 @for (ingredient of editingDish$.ingredients; track ingredient) {
                   @if (normalizeString(ingredient.name).indexOf(normalizeString(searchIngredients)) != -1) {
@@ -100,11 +100,13 @@
                     </section>
                   }
                 }
-
+                @if(editingDish$.ingredients?.length != 0){
+                  <div class="w-full border border-[var(--sandstone-beige)]"></div>
+                }
                 @for (ingredient of (ingredients$ | async); track ingredient) {
                   @if (normalizeString(ingredient.name).indexOf(normalizeString(searchIngredients)) != -1) {
                     @if (EditingIngDoesNotHave(ingredient.id)) {
-                      <section class="bg-slate-300 ingredient">
+                      <section class="bg-[var(--light-parchment)] ingredient">
                         @if(!editingIngredients.includes(ingredient.id)){
                         <h2 class="flex-1 overflow-hidden max-w-11/12" (click)="addIngredientToDish(editingDish$.id, ingredient.id)">
                           {{ ingredient.name }}
@@ -181,7 +183,7 @@
           </div>
           <div class="flex justify-center m-2">
             <button
-              class="p-2 bg-teal-500 rounded-md"
+              class="p-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md"
               type="submit">
               Create
             </button>

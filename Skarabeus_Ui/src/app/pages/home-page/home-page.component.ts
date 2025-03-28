@@ -37,6 +37,14 @@ export class HomePageComponent {
   ngOnInit(){
     this.today.setHours(1)
     this.generateCalendar()
+    
+    var todayPair
+    this.calendar.forEach(x =>
+      {
+        var d = x.find(y => y.key.getTime() == this.today.getTime())
+        if(d!=undefined) todayPair = d
+      });
+    this.putDayToView(todayPair!);
   }
 
   generateCalendar(){

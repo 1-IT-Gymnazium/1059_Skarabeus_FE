@@ -15,7 +15,7 @@
     @if (persons$ | async; as persons) {
     @for (person of persons$ | async; track person) {
     @if (normalizeString(person.firstName).indexOf(normalizeString(search)) != -1) {
-    <section (click)="openEditModal(person.id)" [ngClass]="{'bg-slate-200':person.deleted}" class="person">
+    <section (click)="openEditModal(person.id)" [ngClass]="{'bg-[var(--sandstone-beige)]':person.deleted}" class=" bg-[var(--light-parchment)] person">
       <h2 class="overflow-hidden text-center">{{ person.firstName }}</h2>
       <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ person.age }}</p>
     </section>

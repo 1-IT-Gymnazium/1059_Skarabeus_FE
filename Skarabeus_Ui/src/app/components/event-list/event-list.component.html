@@ -15,7 +15,7 @@
     @if (events$ | async; as events) {
     @for (event of events$ | async; track event) {
     @if (normalizeString(event.name).indexOf(normalizeString(search)) != -1) {
-    <section (click)="openEditModal(event.id)" [class]="{'bg-slate-200' : ended(event.end)}" class="event">
+    <section (click)="openEditModal(event.id)" [class]="{'bg-[var(--sandstone-beige)]' : ended(event.end)}" class="bg-[var(--light-parchment)] event">
       <h2 class="text-center">{{ event.name }}</h2>
       <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ event.description }}</p>
     </section>
@@ -101,7 +101,7 @@
         </div>
 
         <div class="flex justify-center m-2">
-          <button class="p-2 bg-teal-500 rounded-md" type="submit">
+          <button class="p-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md" type="submit">
             Create Event
           </button>
         </div>
@@ -119,13 +119,13 @@
           <div class="mx-10 flex-1">
             <button 
             class="text-lg font-semibold text-center text-gray-700 p-1 rounded-t-md" 
-            [class]="editTab==1 ? 'bg-slate-100':''" 
+            [class]="editTab==1 ? 'bg-[var(--light-parchment)] bg-opacity-30':''" 
             (click)="editTab = 1">
               Participants
             </button>
             <button 
             class="text-lg font-semibold text-center text-gray-700 p-1 rounded-t-md" 
-            [class]="editTab==2 ? 'bg-slate-100':''" 
+            [class]="editTab==2 ? 'bg-[var(--light-parchment)] bg-opacity-30':''" 
             (click)="editTab = 2">
               Foods
             </button>
@@ -221,11 +221,15 @@
                           </section>
                       }
                     }
+                    @if(editingEvent$.participants.length != 0)
+                    {
+                      <div class="w-full border border-[var(--sandstone-beige)]"></div>
+                    }
                   @if (!((persons$ | async)?.length == 0)) {
                     @for (person of persons$ | async; track person.id) {
                       @if (normalizeString(person | person:"fullName").indexOf(normalizeString(searchPersons)) != -1) {
                         @if(EditingEventContainsPerson(person.id) == undefined){
-                          <section class="bg-slate-300 select-item">
+                          <section class="bg-[var(--light-parchment)] select-item">
                             <h2 class="flex-1 overflow-hidden max-w-8/12" (click)="addPersonToEvent(person.id)">{{ person.firstName }}
                               {{ person.lastName }}</h2>
                             <button class="navigation" (click)="editPerson(person.id)"><img src="assets/edit.svg"
@@ -262,11 +266,16 @@
                           </section>
                       }
                     }
+                    
+                    @if(editingEvent$.dishes.length != 0)
+                    {
+                      <div class="w-full border border-[var(--sandstone-beige)]"></div>
+                    }
                   @if (!((dishes$ | async)?.length == 0)) {
                     @for (food of dishes$ | async; track food.id) {
                       @if (normalizeString(food.name).indexOf(normalizeString(searchDishes)) != -1) {
                         @if(EditingEventContainsDish(food.id) == undefined){
-                          <section class="bg-slate-300 select-item">
+                          <section class="bg-[var(--light-parchment)] select-item">
                             <h2 class="flex-1 overflow-hidden max-w-8/12" (click)="addDishToEvent(food.id)">{{ food.name }}</h2>
                             <button class="navigation" (click)="editFood(food.id)"><img src="assets/edit.svg"
                                 class="h-5/6"></button>

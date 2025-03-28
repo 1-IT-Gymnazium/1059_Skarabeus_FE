@@ -15,7 +15,7 @@
     @if (users$ | async; as users) {
     @for (user of users$ | async; track user) {
     @if (normalizeString(user.userName).indexOf(normalizeString(searchUsers)) != -1) {
-    <section [class]="user.deleted?'bg-slate-200':''" class="user" (click)="openEditModal(user.id)">
+    <section [class]="user.deleted?'bg-[var(--sandstone-beige)]':''" class="user bg-[var(--light-parchment)]" (click)="openEditModal(user.id)">
       <h2 class="text-center">{{ user.id }}</h2>
       <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ user.userName }}</p>
     </section>
@@ -80,7 +80,7 @@
 
   @if (activeEditModal) {
   <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-    <div [class]="editingUser.deleted ? 'bg-slate-200' : 'bg-white'" class="w-96 p-6  rounded-lg shadow-lg">
+    <div [class]="editingUser.deleted ? 'bg-[var(--light-parchment)]' : 'bg-white'" class="w-96 p-6  rounded-lg shadow-lg">
       <div class="flex flex-row mx-3">
         <h2 class="flex-1 text-lg font-semibold text-center text-gray-700">Editing User</h2>
         <button class="h-fit" (click)="closeEditModal()">x</button>

@@ -46,21 +46,6 @@ export const routes: Routes = [
         path: 'not-found',
         component: NotFoundPageComponent,
         title: 'Not Found ',
-      },
-      {
-        path:'auth',
-        children:[
-          {
-            path: 'validate-email',
-            component: ValidateEmailPageComponent,
-            title: 'validate-email',
-          },
-          {
-            path: 'change-password',
-            component: ChangePasswordPageComponent,
-            title: 'change-password',
-          }
-        ]
       }
     ],
   },
@@ -68,6 +53,21 @@ export const routes: Routes = [
     path: 'login',
     component: LoginPageComponent,
     title: 'Login',
+  },
+  {
+    path:'auth',
+    children:[
+      {
+        path: 'validate-email',
+        component: ValidateEmailPageComponent,
+        title: 'validate-email',
+      },
+      {
+        path: 'change-password',
+        component: ChangePasswordPageComponent,
+        title: 'change-password',
+      }
+    ]
   },
   { path: '**', redirectTo: '/not-found' },
 ];

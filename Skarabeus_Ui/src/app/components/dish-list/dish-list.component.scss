@@ -1,9 +1,9 @@
 .dish{
-    @apply border p-5 shadow my-3 w-56 h-64 flex flex-col rounded-lg;
+    @apply border p-5 shadow my-3 w-56 h-64 flex flex-col rounded-lg bg-[var(--light-parchment)];
     transition: transform 0.3s ease-in-out;
 }
 .dish>p{
-    @apply flex-1 break-words text-wrap overflow-hidden
+    @apply flex-1 break-words text-wrap overflow-hidden 
 }
 
 .dish button{
@@ -21,7 +21,7 @@
 }
 
 .ingredient{
-    @apply border p-2 shadow mb-5 mx-10 min-h-12 h-12 flex flex-row rounded-lg;
+    @apply border p-2 shadow mx-10 min-h-12 h-12 flex flex-row rounded-lg;
     width: calc(100% - 5rem);
 }
 
