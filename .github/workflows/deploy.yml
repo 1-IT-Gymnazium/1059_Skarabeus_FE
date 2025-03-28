@@ -19,7 +19,7 @@ jobs:
           node-version: 18  # Adjust if needed
 
       - name: Install dependencies
-        run: npm ci  # Ensures clean install
+        run: npm install  # Ensures clean install
 
       - name: Generate documentation
         run: npx compodoc -p tsconfig.compodoc.json -d docs --silent
