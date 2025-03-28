@@ -12,20 +12,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
-      - name: go to source directory
-        run: cd ./Skarabeus_Ui
-        
+    
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18  # Adjust if needed
 
       - name: Install dependencies
-        run: npm install  # Ensures clean install
+        run: 
+          cd ./Skarabeus_Ui
+          npm install  # Ensures clean install
 
       - name: Generate documentation
-        run: npx compodoc -p tsconfig.compodoc.json -d docs --silent
+        run:
+          cd ./Skarabeus_Ui
+          npx compodoc -p tsconfig.compodoc.json -d docs --silent
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
