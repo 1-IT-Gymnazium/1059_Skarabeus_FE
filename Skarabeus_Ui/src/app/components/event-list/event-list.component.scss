@@ -1,0 +1,69 @@
+.event {
+  @apply border p-5 shadow my-3 w-56 h-64 flex flex-col rounded-lg;
+  transition: transform 0.3s ease-in-out;
+}
+
+.event>p {
+  @apply flex-1 break-words text-wrap overflow-hidden
+}
+
+.event button {
+  @apply border pl-3 pr-3 rounded-md
+}
+
+.event:hover {
+  cursor: pointer;
+  box-shadow: 0 0.5rem 1rem rgba(95, 95, 95, 0.5);
+  transform: translateY(-0.5rem);
+}
+
+.inputs>input,
+.inputs>select {
+  @apply w-full
+}
+
+.inputs>* {
+  @apply my-1
+}
+
+.editing_inputs {
+  @apply justify-between content-between 
+}
+
+.edit_input {
+  @apply flex flex-col flex-1 py-1
+}
+
+.edit_input>* {
+  @apply w-full
+}
+
+.select-item-wraper{
+  @apply flex w-full flex-col space-y-5 flex-wrap overflow-scroll
+}
+
+.select-item {
+  @apply border p-2 shadow mx-10 min-h-12 h-12 flex flex-row rounded-lg;
+  width: calc(100% - 5rem);
+}
+
+.select-item button {
+  @apply border text-center rounded-md
+}
+
+.select-item>h2, .select-item>button, .select-item>div {
+  @apply mx-2
+}
+
+.select-item:hover {
+  cursor: pointer;
+}
+
+.select-item:hover .navigation {
+  display: flex;
+}
+
+.navigation {
+  display: none;
+  @apply items-center justify-center h-full p-1 bg-[var(--action-green)] hover:bg-[var(--accent-green)] w-fit
+}

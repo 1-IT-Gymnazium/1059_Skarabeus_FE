@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+::-webkit-scrollbar-corner {
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--sandstone-dark);
+    border-radius: 8px;
+    background-clip: padding-box;
+  }
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.h_100-6{
+  height: calc(100% - 6rem);
+}
+
+.h_100-4{
+  height: calc(100% - 4rem);
+}
+
+.h_100-2\.5{
+  height: calc(100% - 2.5rem);
+}
+
+.h_100-1\.75{
+  height: calc(100% - 1.75rem);
+}
+
+.h_100-1{
+  height: calc(100% - 1rem);
+}
+
+.header{
+  @apply text-2xl font-semibold
+}
+
+h2{
+  @apply flex justify-start content-center flex-wrap
+}
+
+input,select,textarea{
+  @apply border rounded ;
+  --tw-ring-color:var(--accent-green) !important; /* Change the focus ring color */
+}
+
+input[type="number"]{
+  @apply border rounded border-[var(--light-parchment)];
+
+}
+
+:root{
+  --primary-dark-blue: #1A3A5B;
+  --night-blue: #1C3D5A;  
+
+  --primary-white: #FFFFFF;
+  --primary-gray: #F2F2F2;
+
+  --accent-orange: #F5A623;
+  --gold: #D4A537;      
+  --sandstone-beige: #E5C99D;  
+  --sandstone-dark: #b99761;   
+  --light-parchment: #F8F5E4;  
+
+  --accent-green: #7ED321;
+  --action-green: #2a932d;  
+  --dark-green: #154717;      
+
+  --primary-light-blue: #4A90E2;
+}

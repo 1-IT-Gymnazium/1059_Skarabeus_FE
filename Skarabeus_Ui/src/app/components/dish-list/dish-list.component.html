@@ -1,0 +1,195 @@
+<div class="p-8 h_100-4 space-y-2">
+  <h1 class="header">Dishes</h1>
+  <div class="flex flex-wrap items-center">
+    <input placeholder="search" type="text" [(ngModel)]="search" class="w-64 p-2 border rounded" />
+    @if(search != "") {
+      <button (click)="search = ''" class="ml-2 rounded-md">x</button>
+    }
+    <button (click)="openCreateModal()" class="w-10 h-10 ml-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md">
+      <b>+</b>
+    </button>
+  </div>
+
+  <div class="flex flex-wrap flex-1 overflow-y-scroll justify-between h_100-4">
+    @if (dishes$ | async; as dishes) {
+      @for (dish of dishes$ | async; track dish) {
+        @if (normalizeString(dish.name).indexOf(normalizeString(search)) != -1) {
+          <section (click)="openEditModal(dish.id)" class="dish">
+            <h2 class="text-center">{{ dish.name }}</h2>
+            <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ dish.description }}</p>
+          </section>
+        }
+      }
+    }
+    @else {
+      Žádná data 😦
+    }
+  </div>
+</div>
+
+
+  @if (activeModal) {
+    <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+      <div class="w-4/5 p-6 bg-white rounded-lg shadow-lg h-4/5">
+        <div class="flex flex-row">
+          <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Editing</h2>
+          <button class="h-fit " (click)="closeEditModal()">x</button>
+        </div>
+
+        <div class="flex justify-around h_100-6">
+          <div class="w-2/5">
+            <label class="block text-sm text-gray-600">Name</label>
+            <div class="flex flex-row mb-3 ">
+              <input type="text" [(ngModel)]="editingDish$.name" (blur)="update()" class="w-full p-2 border rounded" />
+              <button (click)="remove()" class="p-2 ml-2 bg-red-600 hover:bg-[red] rounded-md">Delete</button>
+            </div>
+
+            <label class="block text-sm text-gray-600">Description</label>
+            <textarea [(ngModel)]="editingDish$.description" (blur)="update()" class="w-full p-2 mb-3 border rounded h_100-2.5"></textarea>
+          </div>
+
+          <div class="w-3/5">
+            <label class="block mx-10 text-sm text-gray-600">Ingredients</label>
+            <div class="flex flex-wrap justify-center px-10 mb-2">
+              <input
+                placeholder="search"
+                type="text"
+                [(ngModel)]="searchIngredients"
+                class="flex-1 border rounded"
+              />
+              <button *ngIf="searchIngredients != ''" (click)="searchIngredients = ''" class="ml-2 rounded-md">x</button>
+              <button (click)="createIngredient()" class="w-10 h-10 ml-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md mr-2.5">
+                <b>+</b>
+              </button>
+            </div>
+
+            <div class="flex flex-col w-full overflow-y-scroll space-y-4 h_100-1">
+              @if (!((ingredients$ | async)?.length == 0)) {
+                @for (ingredient of editingDish$.ingredients; track ingredient) {
+                  @if (normalizeString(ingredient.name).indexOf(normalizeString(searchIngredients)) != -1) {
+                    <section class="ingredient">
+                      @if(!editingIngredients.includes(ingredient.ingredientId)){
+                        <h2 class="flex-1 overflow-hidden max-w-8/12" (click)="removeIngredientFromDish(ingredient.ingredientId)">
+                          {{ ingredient.name }}
+                        </h2>
+                        <div class="w-fit">
+                          <button
+                          class="navigation"
+                          (click)="toggleEditIngredient(ingredient.ingredientId)"
+                          >
+                            <img src="assets/edit.svg" class="h-5/6">
+                          </button>
+                          <h2 class="h-full price">{{ ingredient.price }},-</h2>
+                        </div>
+                        <input
+                          class="w-2/12 border-gray-400 rounded"
+                          type="number"
+                          title="amount in standard units (kg,l)"
+                          (blur)="ubdateIngredientDish(ingredient)"
+                          [(ngModel)]="ingredient.amount"
+                        />
+                      }
+                      @else{
+                        <input title="name" class="flex-1 p-2 mr-2" [(ngModel)]="ingredient.name">
+                        <input title="price for standard unit (kg,l)" class="w-2/12" type="number" [(ngModel)]="ingredient.priceForUnit">
+                        <div class="w-fit">
+                          <button (click)="updateIngredientFromDish(ingredient)" class="h-full px-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] w-fit">Done</button>
+                          <button (click)="removeIngredient(ingredient.ingredientId)" class="h-full px-2 bg-red-600 hover:bg-[red] w-fit">Delete</button>
+                        </div>
+                      }
+                    </section>
+                  }
+                }
+                @if(editingDish$.ingredients?.length != 0){
+                  <div class="w-full border border-[var(--sandstone-beige)]"></div>
+                }
+                @for (ingredient of (ingredients$ | async); track ingredient) {
+                  @if (normalizeString(ingredient.name).indexOf(normalizeString(searchIngredients)) != -1) {
+                    @if (EditingIngDoesNotHave(ingredient.id)) {
+                      <section class="bg-[var(--light-parchment)] ingredient">
+                        @if(!editingIngredients.includes(ingredient.id)){
+                        <h2 class="flex-1 overflow-hidden max-w-11/12" (click)="addIngredientToDish(editingDish$.id, ingredient.id)">
+                          {{ ingredient.name }}
+                        </h2>
+                        <button class="navigation" (click)="toggleEditIngredient(ingredient.id)">
+                          <img src="assets/edit.svg" class="h-5/6">
+                        </button>
+
+                      }
+                      @else{
+                        <input title="name" class="flex-1 p-2 mr-2 " [(ngModel)]="ingredient.name">
+                        <input title="price for standard unit (kg,l)" class="w-2/12" type="number" [(ngModel)]="ingredient.priceForUnit">
+                        <div class="w-fit">
+                          <button (click)="updateIngredient(ingredient)" class="h-full px-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] w-fit" >Done</button>
+                          <button (click)="removeIngredient(ingredient.id)" class="h-full px-2 bg-red-600 hover:bg-[red] w-fit">Delete</button>
+                        </div>
+                      }
+                      </section>
+                    }
+                  }
+                }
+              }
+
+              @else {
+                Žádná data 😦
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+    @if (activeCreateModal) {
+    <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+      <div class="w-5/6 p-6 pb-2 bg-white rounded-lg shadow-lg sm:w-3/6 md:w-2/6 h-fit">
+        <div class="flex flex-row">
+          <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Creating</h2>
+          <button class="h-fit" (click)="closeCreateModal()">x</button>
+        </div>
+        <form #dishForm="ngForm" (ngSubmit)="checkForm(dishForm)" class="flex flex-col space-y-2 h-full inputs">
+          @if(lastCreateError$ != null){
+            <h2 class="text-red-600 font-bold">
+              {{lastCreateError$?.errors["Name"]}}
+            </h2>
+          }
+          <div class="flex flex-col flex-1 mx-1">
+            <label  [class]="name.invalid && name.touched?'text-red-600':''">Name
+              @if(name.invalid && name.touched){
+                can not be empty
+              }
+              @else{
+                <span class="text-red-400">*</span>
+              }
+            </label>
+            <input
+              minlength="1"
+              class="rounded"
+              type="text"
+              name="name"
+              [(ngModel)]="creatingDish.name"
+              #name="ngModel"
+              required>
+              
+          </div>
+
+          <div class="flex flex-col flex-1 mx-1">
+            <label>Description</label>
+            <input
+              class="rounded"
+              type="text"
+              name="description"
+              [(ngModel)]="creatingDish.description">
+          </div>
+          <div class="flex justify-center m-2">
+            <button
+              class="p-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md"
+              type="submit">
+              Create
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  }

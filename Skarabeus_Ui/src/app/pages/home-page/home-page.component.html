@@ -1,0 +1,140 @@
+<div class="p-8 h_100-4 space-y-2">
+  <div class="flex space-x-3">
+    <h1 class="header w-3/5">Upcoming events on {{currentMonth+1}}. {{currentYear}}</h1>
+    @if(viewDay||viewEventDetail){
+      <h1 class="header flex-1">Detail view</h1>
+    }
+    @if(viewEventDetail){
+      <button class="items-center justify-center rounded h-8 p-1 bg-[var(--action-green)] hover:bg-[var(--accent-green)]" (click)="openEventEdit(viewEventDetail.id)">
+        <img src="assets/edit.svg" class="h-5/6">
+      </button>
+    }
+  </div>
+  <div class="h_100-2.5 flex space-x-8">
+  <!--calendar-->
+  <section [class]="viewDay||viewEventDetail?'w-3/5':'w-full'" class="h-full bg-[var(--light-parchment)] pt-1 overflow-hidden border rounded-xl">
+    <div class="flex flex-row w-full h-7">
+      <button class="text-lg font-bold px-2 text-center" (click)="previusMonth()"><</button>
+      <div class="grid cursor-default flex-1 grid-cols-7">
+        <!-- Weekday Headers -->
+        @for(week of calendar[0]; track week.key){
+          <div class="text-lg font-bold text-center">{{ week.key| date:"E" }}</div>
+        }
+      </div>
+      <button class="text-lg font-bold text-center px-2" (click)="nextMonth()">></button>
+    </div>
+    <div class="grid grid-cols-7 h_100-1.75">    
+      <!-- Calendar Days -->
+      @for(week of calendar; track week){
+        @for(day of week; track day.key){
+          <div 
+            class="relative rounded border-gray-400 grid grid-rows-4"
+            [class]="day.key.toISOString() == today.toISOString() ? 'bg-[var(--sandstone-beige)]':''"
+            > <!-- Each day cell -->
+            <div (click)="putDayToView(day)" class="flex flex-row w-full px-2 justify-between text-sm row-start-1  cursor-pointer">
+              <h3 class="font-semibold">{{ day.key | date:"d." }}</h3>
+              @if(day.value!.length > 3){
+                <h3 class="">+{{day.value!.length-3}}</h3>
+              }
+            </div>
+          
+            <!-- Events -->
+            @for(event of day.value?.slice(0,3); track event.id){
+              @let eventStart = event|event:"startDate";
+              @let eventEnd = event|event:"endDate";
+              @let eventColor = stringToColor((event.start+(event.rowInGrid!/4)));
+              <div 
+                (click)="putEventToView(event.id)"
+                class="flex flex-row cursor-pointer"
+                [style.grid-row-start]="event?.rowInGrid"
+              >
+                @if(dayBeforeBreak(week,week.indexOf(day),event)){
+                  <h3 class="line-clamp-1 text-ellipsis font-extrabold text-sm" [style.color]="eventColor"><</h3>
+                }
+                <h3 
+                  class="line-clamp-1 text-ellipsis px-2 font-normal flex-1"
+                  [class]="calendar.length==6?'text-sm':''"
+                  [style.background-color]="eventColor"
+                  [class.rounded-l-lg]="eventStart.getTime() == day.key.getTime()"
+                  [class.rounded-r-lg]="eventEnd.getTime() == day.key.getTime()"
+                  >
+                    {{ event.name }}
+                </h3>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </section>
+  @if(viewDay || viewEventDetail){
+  <section class="w-2/5 h-full bg-[var(--light-parchment)] p-4 overflow-hidden border flex flex-col justify-between rounded-xl">
+    @if(viewDay){
+      <div class="flex flex-row justify-between">
+        <h3 class="header">Events on {{viewDay.key | date:"fullDate"}} </h3>
+        <button (click)="viewDay=undefined;viewEventDetail=undefined">x</button>
+      </div>
+        <div class="flex flex-col space-y-3 p-3 flex-1">
+          @for(event of viewDay.value; track event.id){
+              @let eventColor = stringToColor((event.start+(event.rowInGrid!/4)));
+              <div 
+                (click)="putEventToView(event.id)"
+                class="flex flex-row cursor-pointer"
+              >
+                <h3 
+                  class="line-clamp-1 text-ellipsis px-2 font-normal flex-1 rounded-lg text-lg"
+                  [style.background-color]="eventColor"
+                  >
+                    {{ event.name }}
+                </h3>
+              </div>
+          }
+          @if(viewDay.value?.length == 0){
+            <h2>No events on this day</h2>
+          }
+           <div 
+                class="flex flex-row cursor-pointer"
+              >
+                <button 
+                  class="px-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] flex-1 rounded-lg text-lg"
+                  (click)="openEventCreate()"
+                  >
+                    Add new Event
+                </button>
+              </div>
+      </div>
+    }
+    @if(viewEventDetail != undefined){
+      <div class="flex flex-row justify-between">
+        <h3 class="header">{{viewEventDetail.name}}</h3>
+        <button (click)="viewDay=undefined;viewEventDetail=undefined">x</button>
+      </div>
+      <div class="detail_view_inline">
+        <h2 class="font-semibold">place: </h2>
+        <h2>{{(viewEventDetail.place)}}</h2>
+      </div>
+      <div class=" h-2/5 flex flex-col">
+        <h2 class="font-semibold">Description:</h2>
+        <p class="overflow-y-auto text-start p-0 flex-1">{{viewEventDetail.description}}</p>
+      </div>
+      <div class="detail_view_inline">
+        <h2 class="font-semibold">Starts on: </h2>
+        <h2>{{viewEventDetail.start | date:"fullDate"}}</h2>
+      </div>
+      <div class="detail_view_inline">
+        <h2 class="font-semibold">Ends on: </h2>
+        <h2>{{viewEventDetail.end | date:"fullDate"}}</h2>
+      </div>
+      <div class="detail_view_inline">
+        <h2 class="font-semibold">Person responsible: </h2>
+        <h2>{{(viewEventDetail.responsiblePerson! | person:"fullName")}}</h2>
+      </div>
+      <div class="detail_view_inline">
+        <h2 class="font-semibold">Number of Participants: </h2>
+        <h2>{{(viewEventDetail.participants.length)}}</h2>
+      </div>
+    }
+  </section>
+}
+  </div>
+</div>

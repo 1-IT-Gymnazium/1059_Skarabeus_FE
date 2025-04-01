@@ -1,0 +1,141 @@
+<div class="p-8 h_100-4 space-y-2">
+  <h1 class="header">Users</h1>
+  <div  class="flex flex-wrap items-center">
+    <input placeholder="search" type="text" [(ngModel)]="searchUsers"
+      class="p-2 border rounded w-64" />
+      @if(searchUsers != ""){
+        <button  (click)="searchUsers = ''" class="ml-2 rounded-md">x</button>
+      }
+    <button (click)="openCreateModal()" class="w-10 h-10 ml-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md">
+      <b>+</b>
+    </button>
+  </div>
+
+  <div class="flex flex-wrap overflow-y-scroll justify-between h-full" >
+    @if (users$ | async; as users) {
+    @for (user of users$ | async; track user) {
+    @if (normalizeString(user.userName).indexOf(normalizeString(searchUsers)) != -1) {
+    <section [class]="user.deleted?'bg-[var(--sandstone-beige)]':''" class="user bg-[var(--light-parchment)]" (click)="openEditModal(user.id)">
+      <h2 class="text-center">{{ user.id }}</h2>
+      <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ user.userName }}</p>
+    </section>
+    }
+    }
+    }
+    @else {
+    Žádná data 😦
+    }
+  </div>
+</div>
+
+  @if (activeCreateModal) {
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+    <div class="w-5/6 p-6 pb-2 bg-white rounded-lg shadow-lg sm:w-3/6 md:w-2/6 h-fit">
+      <div class="flex flex-row">
+        <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Creating</h2>
+        <button class="h-fit" (click)="closeCreateModal()">x</button>
+      </div>
+      <form #userForm="ngForm" (ngSubmit)="validateAndTryCreate(userForm)" class="flex flex-col h-full inputs">
+        <!-- username -->
+        <div class="flex flex-col flex-1 mx-1">
+          <label [class]="userName.invalid && userName.touched ? 'text-red-600' : '' ">
+            User name
+            @if(userName.invalid && userName.touched){
+            is required
+            }
+          </label>
+          <input class="rounded" type="text" name="userName" [(ngModel)]="creatingUser.name" #userName="ngModel"
+            pattern="^(?!\s*$).+" required>
+        </div>
+        <!-- email -->
+        <div class="flex flex-col flex-1 mx-1">
+          <label [class]="userMail.invalid && userMail.touched ? 'text-red-600' : '' ">
+            User email
+            @if(userMail.invalid && userMail.touched){
+            must be a valid email address
+            }
+          </label>
+          <input class="rounded" type="email" name="userMail" [(ngModel)]="creatingUser.email" #userMail="ngModel"
+            required email>
+        </div>
+        <div class="flex flex-col flex-1 mx-1">
+          <label [class]="userPerson.invalid && userPerson.touched ? 'text-red-600' : '' ">Identity of user</label>
+          <select class="rounded" #userPerson="ngModel" name="personId" [(ngModel)]="creatingUser.personId" required>
+            <option [ngValue]="null" disabled selected>none</option>
+            @for(person of persons$ | async;track person){
+            <option [value]="person.id">{{person.firstName}}</option>
+            }
+          </select>
+        </div>
+        <div class="flex justify-center m-2">
+          <button class="p-2 bg-teal-500 rounded-md" type="submit">
+            Create
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+  }
+
+  @if (activeEditModal) {
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+    <div [class]="editingUser.deleted ? 'bg-[var(--light-parchment)]' : 'bg-white'" class="w-96 p-6  rounded-lg shadow-lg">
+      <div class="flex flex-row mx-3">
+        <h2 class="flex-1 text-lg font-semibold text-center text-gray-700">Editing User</h2>
+        <button class="h-fit" (click)="closeEditModal()">x</button>
+      </div>
+      <div class="flex flex-col h_100-4">
+        <!-- username -->
+        <div class="flex flex-col flex-1 m-3">
+          <label [class]="userName.invalid && userName.touched ? 'text-red-600' : '' ">
+            User name
+            @if(userName.invalid && userName.touched){
+            is required
+            }
+            <p class="float-right">
+              @if(!editingUser.emailConfirmed){
+                not
+              }
+              confirmed</p>
+          </label>
+          <input (blur)="onBlur('userName', userName.valid!)" class="rounded" type="text" name="userName"
+            [(ngModel)]="editingUser.userName" #userName="ngModel" pattern="^(?!\s*$).+" required>
+        </div>
+        <!-- email -->
+        <div class="flex flex-col flex-1 m-3">
+          <label [class]="email.invalid && email.touched ? 'text-red-600' : '' ">
+            User email
+            @if(email.invalid && email.touched){
+            must be a valid email address
+            }
+          </label>
+          <input (blur)="onBlur('email', email.valid!)" class="rounded" type="email" name="email"
+            [(ngModel)]="editingUser.email" #email="ngModel" required email>
+        </div>
+        <!-- role -->
+        <div class="flex flex-col flex-1 m-3">
+          <label>
+            User Role
+          </label>
+          <select class="rounded" [(ngModel)]="editingUser.role" (change)="changeRole()">
+            @for(role of roles;track role){
+              <option [value]="role">{{role==""?'None':role}}</option>
+            }
+          </select>
+        </div>
+        <div class="flex justify-center mt-2 space-x-5">
+          <button class="p-2 bg-teal-500 rounded-md" (click)="openPersonEdit()">
+            Identity
+          </button>
+            @if(editingUser.deleted){
+              <button class="p-2 bg-red-500 rounded-md" (click)="unDelete()">Undelete</button>
+            }
+            @else {
+              <button class="p-2 bg-orange-500 rounded-md" (click)="delete()">Delete</button>
+            }
+        </div>
+      </div>
+    </div>
+  </div>
+  }
