@@ -31,7 +31,7 @@ jobs:
       - name: Generate documentation
         run: |
           cd ./Skarabeus_Ui
-          copy ..\\README.md .
+          cp ../README.md .
           npx compodoc -p tsconfig.compodoc.json -d ../docs --disableCoverage --customLogo ./src/assets/skarabeus_logo_small.png --customFavicon ./src/assets/skarabeus_logo.png --silent
           
       - name: Upload artifact
