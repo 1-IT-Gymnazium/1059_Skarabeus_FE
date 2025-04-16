@@ -4,6 +4,11 @@ import { UserListComponent } from "../../components/user-list/user-list.componen
 import { AuthService } from '../../services/auth.service';
 import { AsyncPipe } from '@angular/common';
 
+/**
+ * this page puts together person-list and user-list. 
+ * 
+ * user-list is displayed only to administrators
+ */
 @Component({
   selector: 'app-people-page',
   standalone:true,

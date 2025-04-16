@@ -127,11 +127,15 @@
       </div>
       <div class="detail_view_inline">
         <h2 class="font-semibold">Person responsible: </h2>
-        <h2>{{(viewEventDetail.responsiblePerson! | person:"fullName")}}</h2>
+        <h2 class="cursor-pointer" (click)="personDetail(viewEventDetail.responsiblePerson!.id)" routerLinkActive="router-link-active" >{{(viewEventDetail.responsiblePerson! | person:"fullName")}}</h2>
       </div>
       <div class="detail_view_inline">
         <h2 class="font-semibold">Number of Participants: </h2>
         <h2>{{(viewEventDetail.participants.length)}}</h2>
+      </div>
+      <div class="detail_view_inline">
+        <h2 class="font-semibold">Price per person:</h2>
+        <h2>{{getEventPrice(true)}},-</h2>
       </div>
     }
   </section>

@@ -5,6 +5,10 @@ import { PasswordResetModel, TokenModel } from '../../models/auth.interface';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
+
+/**
+ * This page tests to validate email if the route contains emailToken, and then uses passwordToken to change users password
+ */
 @Component({
   selector: 'app-change-password-page',
   standalone:true,

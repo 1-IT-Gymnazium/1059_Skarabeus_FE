@@ -123,6 +123,13 @@
         </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>this pipe parses persons information</p>
+
+            </p>
 
 
         <section data-compodoc="block-metadata">
@@ -166,8 +173,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="10"
-                                    class="link-to-prism">src/app/pipes/person.pipe.ts:10</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="14"
+                                    class="link-to-prism">src/app/pipes/person.pipe.ts:14</a></div>
                         </td>
                     </tr>
 
@@ -234,6 +241,10 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Pipe, PipeTransform } from &#x27;@angular/core&#x27;;
 import { PersonDetailModel, SmallPersonDetailModel } from &#x27;../models/person.interface&#x27;;
 
+
+/**
+ * this pipe parses persons information
+ */
 @Pipe({
   name: &#x27;person&#x27;,
   standalone:true

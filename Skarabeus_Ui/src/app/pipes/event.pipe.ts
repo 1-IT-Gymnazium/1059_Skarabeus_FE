@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { EventDetailModel } from '../models/event.interface';
 
+/**
+ * this pipe parses data from event
+ */
 @Pipe({
   name: 'event',
   standalone:true

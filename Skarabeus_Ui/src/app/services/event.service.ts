@@ -15,7 +15,7 @@ export class EventService {
     this.updateEvents()
   }
 
-  updateEvents(){
+  updateEvents(myFilter?:(event:EventDetailModel)=>boolean){
     this.httpClient.get<EventDetailModel[]>(this.baseUrl)
     .subscribe(x =>{
       console.log(x)
@@ -24,6 +24,9 @@ export class EventService {
         y.end = new Date(y.end).toISOString().split('T')[0]
         return y;
       })
+      if(myFilter != undefined){
+        x = x.filter(myFilter);
+      }
       this.events.next(x)
     })
   }

@@ -4,6 +4,9 @@ import { Observable, of } from 'rxjs';
 import { map, catchError, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service'; // Adjust the import path if needed
 
+/**
+ * This guard protects pages from being accesed without autentication and redirects to login page
+ */
 @Injectable({
   providedIn: 'root',
 })

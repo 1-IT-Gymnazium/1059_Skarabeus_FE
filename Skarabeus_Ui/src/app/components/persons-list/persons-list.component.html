@@ -11,13 +11,17 @@
     </button>
   </div>
 
-  <div class="flex flex-wrap overflow-y-scroll justify-between h-full" >
+  <div class="flex flex-wrap overflow-y-scroll content-start justify-between h-full" >
     @if (persons$ | async; as persons) {
     @for (person of persons$ | async; track person) {
     @if (normalizeString(person.firstName).indexOf(normalizeString(search)) != -1) {
-    <section (click)="openEditModal(person.id)" [ngClass]="{'bg-[var(--sandstone-beige)]':person.deleted}" class=" bg-[var(--light-parchment)] person">
-      <h2 class="overflow-hidden text-center">{{ person.firstName }}</h2>
-      <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ person.age }}</p>
+    <section (click)="openEditModal(person.id)" [ngClass]="{'bg-[var(--sandstone-beige)]':person.deleted}" class="bg-[var(--light-parchment)] person">
+      <div class="flex flex-row justify-between">
+        <h2 class="overflow-hidden">{{ person.firstName}} {{ person.nickname }} {{person.lastName}}</h2>
+        <h2 class="font-bold" [class]="person.active? 'text-[var(--action-green)]':'text-red-800'">{{person.active? "Active":"Inactive"}}</h2>        
+      </div>
+      <h2 class="text-center">Status: {{person.status}}</h2>
+      <h2 class="">Age: {{person.age}}</h2>
     </section>
     }
     }
@@ -30,41 +34,40 @@
 
   @if (activeEditModal) {
   <div class="fixed inset-0 z-10 flex items-center justify-center bg-gray-800 bg-opacity-75">
-    <div class="w-4/5 p-6 bg-white rounded-lg shadow-lg h-4/5">
+    <div class="w-fit p-6 bg-white rounded-lg shadow-lg h-4/5">
       <div class="flex flex-row">
-        <h2 class="flex-1 mb-4 text-lg font-semibold text-center text-gray-700">Editing</h2>
+        <h2 class="flex-1 mb-2 text-lg font-semibold text-center text-gray-700">Editing</h2>
         <button class="h-fit" (click)="closeEditModal()">x</button>
       </div>
-      <div class="flex flex-row justify-center space-x-5">
-        <button class="p-1 m-1 border rounded-t-md" [class]="editingPersonPage==1 ? 'bg-slate-300':'bg-slate-100'" (click)="editingPersonPage = 1">Personal Info</button>
-        <button class="p-1 m-1 border rounded-t-md" [class]="editingPersonPage==2 ? 'bg-slate-300':'bg-slate-100'" (click)="editingPersonPage = 2">Mothers Info</button>
-        <button class="p-1 m-1 border rounded-t-md" [class]="editingPersonPage==3 ? 'bg-slate-300':'bg-slate-100'" (click)="editingPersonPage = 3">Fathers Info</button>
+      <div class="flex flex-row space-x-5">
+        <button class="p-1 m-1 border rounded-t-md hover:bg-[var(--accent-green)]" [class]="editingPersonPage==1 ? 'bg-[var(--accent-green)]':'bg-[var(--action-green)]'" (click)="editingPersonPage = 1">Personal Info</button>
+        <button class="p-1 m-1 border rounded-t-md hover:bg-[var(--accent-green)]" [class]="editingPersonPage==2 ? 'bg-[var(--accent-green)]':'bg-[var(--action-green)]'" (click)="editingPersonPage = 2">Mothers Info</button>
+        <button class="p-1 m-1 border rounded-t-md hover:bg-[var(--accent-green)]" [class]="editingPersonPage==3 ? 'bg-[var(--accent-green)]':'bg-[var(--action-green)]'" (click)="editingPersonPage = 3">Fathers Info</button>
       </div>
-      <div class="flex flex-wrap editing_inputs h_100-6">
+      <div class="flex flex-wrap flex-col justify-between editing_inputs h_100-4.5">
 
       @switch (editingPersonPage) {
         @default{
-        <div>
-          <div>
-            <label>First name</label>
+          <div class="flex flex-col">
+            <label [class]="firstName.invalid && firstName.touched ? 'text-red-600':''">First name @if(firstName.invalid && firstName.touched){is invalid}</label>
             <input type="text" class="rounded" [(ngModel)]="editingPerson$.firstName" #firstName="ngModel" required
               minlength="3" (blur)="onBlur('firstName', firstName.valid!)">
-            <span *ngIf="firstName.invalid && firstName.touched" class="text-red-500">Invalid name</span>
           </div>
 
-          <div>
+          <div class="flex flex-col">
             <label>nickname</label>
             <input type="text" class="rounded" [(ngModel)]="editingPerson$.nickname" #nickname="ngModel" (blur)="update()">
           </div>
 
-          <div>
+          <div class="flex flex-col">
             <label>Last name</label>
             <input type="text" class="rounded" [(ngModel)]="editingPerson$.lastName" #lastName="ngModel" required
               minlength="3" (blur)="onBlur('lastName', lastName.valid!)">
             <span *ngIf="lastName.invalid && lastName.touched" class="text-red-500">Invalid name</span>
           </div>
 
-          <div>
+          <div class="flex flex-row justify-between">
+          <div class="flex flex-col">
             <label>Gender</label>
             <select class="rounded" [(ngModel)]="editingPerson$.gender" required (blur)="onBlur('gender', true)">
               <option [value]="true">Male</option>
@@ -72,32 +75,36 @@
             </select>
           </div>
 
-          <div>
+          <div class="flex flex-col">
             <label>Date of Birth</label>
             <input type="date" class="rounded" [(ngModel)]="editingPerson$.dateOfBirth"
               (blur)="onBlur('dateOfBirth', true)">
           </div>
+          </div>
 
-          <div>
+          <div class="flex flex-col">
             <label>Email</label>
             <input type="email" class="rounded" [(ngModel)]="editingPerson$.email" #email="ngModel" required
               (blur)="onBlur('email', email.valid!)">
             <span *ngIf="email.invalid && email.touched" class="text-red-500">Invalid email</span>
           </div>
 
-          <div>
+          <div class="flex flex-col">
             <label>Phone Number</label>
             <input type="tel" class="rounded" [(ngModel)]="editingPerson$.phoneNumber" #phone="ngModel" required
               pattern="^[0-9]{9,15}$" (blur)="onBlur('phoneNumber', phone.valid!)">
             <span *ngIf="phone.invalid && phone.touched" class="text-red-500">Invalid phone</span>
           </div>
 
-          <div>
+          <div class="flex flex-row justify-between items-end">
+          <div class="flex h-full flex-col">
             <label>Active</label>
-            <input type="checkbox" [(ngModel)]="editingPerson$.active" (blur)="onBlur('active', true)">
+            <input class="self-center" type="checkbox" [(ngModel)]="editingPerson$.active" (blur)="onBlur('active', true)">
           </div>
 
-          <div>
+          <button class="p-2 bg-red-500 rounded-md h-fit" (click)="remove()">Delete</button>
+
+          <div class="flex flex-col">
             <label>Status</label>
             <select class="rounded" [(ngModel)]="editingPerson$.status" required (blur)="onBlur('status', true)">
               <option [value]="'other'">Other</option>
@@ -106,24 +113,23 @@
               <option [value]="'leader'">Leader</option>
             </select>
           </div>
-          <button (click)="remove()">delete</button>
-        </div>
+          </div>
         }
         @case(2){
-        <div>
-          <div>
+        <div class="flex flex-col">
+          <div class="flex flex-col">
             <label>Mother's Full Name</label>
             <input type="text" class="rounded" [(ngModel)]="editingPerson$.fullNameOfMother"
               (blur)="onBlur('fullNameOfMother', true)">
           </div>
 
-          <div>
+          <div class="flex flex-col">
             <label>Mother's Email</label>
             <input type="email" class="rounded" [(ngModel)]="editingPerson$.emailOfMother" #emailMother="ngModel"
               (blur)="onBlur('emailOfMother', emailMother.valid!)">
           </div>
 
-          <div>
+          <div class="flex flex-col">
             <label>Mother's Phone Number</label>
             <input type="tel" class="rounded" [(ngModel)]="editingPerson$.phoneNumberOfMother" #phoneMother="ngModel"
               pattern="^[0-9]{9,15}$" (blur)="onBlur('phoneNumberOfMother', phoneMother.valid!)">
@@ -131,24 +137,24 @@
         </div>
         }
         @case(3){
-        <div>
           <div>
+          <div class="flex flex-col">
             <label>Father's Full Name</label>
             <input type="text" class="rounded" [(ngModel)]="editingPerson$.fullNameOfFather"
               (blur)="onBlur('fullNameOfFather', true)">
           </div>
-          <div>
+          <div class="flex flex-col">
             <label>Father's Email</label>
             <input type="email" class="rounded" [(ngModel)]="editingPerson$.emailOfFather" #emailFather="ngModel"
               (blur)="onBlur('emailOfFather', emailFather.valid!)">
           </div>
 
-          <div>
+          <div class="flex flex-col">
             <label>Father's Phone Number</label>
             <input type="tel" class="rounded" [(ngModel)]="editingPerson$.phoneNumberOfFather" #phoneFather="ngModel"
               pattern="^[0-9]{9,15}$" (blur)="onBlur('phoneNumberOfFather', phoneFather.valid!)">
           </div>
-        </div>
+          </div>
         }
       }
       </div>

@@ -2,6 +2,7 @@ export interface DishDetail {
     id: string;
     name: string;
     description: string;
+    price:number;
     ingredients:IngredientDishDetail[]|undefined;
 }
 

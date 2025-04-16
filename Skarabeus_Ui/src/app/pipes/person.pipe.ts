@@ -1,6 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { PersonDetailModel, SmallPersonDetailModel } from '../models/person.interface';
 
+
+/**
+ * this pipe parses persons information
+ */
 @Pipe({
   name: 'person',
   standalone:true

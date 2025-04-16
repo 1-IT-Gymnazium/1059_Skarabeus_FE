@@ -1,7 +1,7 @@
 <section class="flex flex-col justify-center items-center text-Black h-full bg-no-repeat bg-[var(--light-parchment)] bg-[url('/assets/skarabeus_logo.png')] bg-blend-overlay bg-contain">
-  <div class="border-2 p-10 rounded-3xl w-96 h-[26rem] bg-white space-y-6 shadow-md">
+  <div class="border-2 p-10 rounded-3xl w-96 h-[26rem] bg-white shadow-md">
     @if(!resetingPassword){
-      <div class="items-center flex justify-between">
+      <div class="items-center flex justify-between mb-4">
         <h2 class="text-2xl font-bold text-center text-blck">Login</h2>
         @if(authService.userInfoModel$|async;){
           <a class="text-md font-bold text-center items-center flex text-blck" [routerLink]="['']">logged in 
@@ -12,12 +12,12 @@
         }
       </div>
       <div class=" h-[calc(100%-3rem)] ">
-        @if (lastError$ != null) {
-          <h2 class="text-red-600 font-bold">
-            {{lastError$?.errors["error"]}}
-          </h2>
-        }
-        <form class="max-w-sm mx-auto space-y-4 flex items-stretch h_100-1.75 justify-between flex-col" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <form class="max-w-sm mx-auto space-y-4 flex items-stretch h_100-1.75 justify-between flex-col" [formGroup]="loginForm" (ngSubmit)="onSubmit()"> 
+          @if (lastError$ != null) {
+            <h2 class="text-red-600 font-bold">
+              {{lastError$?.errors["error"]}}
+            </h2>
+          }
           <div class="">
             <label for="email" [class]="lastError$ != null ? 'text-red-600':''" class="block mb-2 text-sm font-medium">Your email
               @if(lastError$?.errors["Email"] != null){

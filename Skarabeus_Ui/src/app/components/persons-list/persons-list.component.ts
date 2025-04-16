@@ -8,6 +8,12 @@ import { combineLatest } from 'rxjs';
 import { EditService } from '../../services/Edit.service';
 import { Router } from '@angular/router';
 
+
+/**
+ * This component shows list of all created person colormarking the soft-deleted-ones
+ * 
+ * other then that it contains modals for creating and modifying the persons.
+ */
 @Component({
   selector: 'app-persons-list',
   standalone: true,

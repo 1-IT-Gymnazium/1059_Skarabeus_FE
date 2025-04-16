@@ -1,9 +1,10 @@
 {
   "name": "skarabeus_ui",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "scripts": {
     "start": "npm run compodoc && ng serve",
-    "compodoc": "npx compodoc -p tsconfig.compodoc.json -d ../docs --disableCoverage --customLogo ./src/assets/skarabeus_logo_small.png --customFavicon ./src/assets/skarabeus_logo.png"
+    "build": "ng build",
+    "compodoc": "npx compodoc -p tsconfig.compodoc.json -d ../docs --customLogo ./src/assets/skarabeus_logo_small.png --customFavicon ./src/assets/skarabeus_logo.png"
   },
   "private": true,
   "dependencies": {

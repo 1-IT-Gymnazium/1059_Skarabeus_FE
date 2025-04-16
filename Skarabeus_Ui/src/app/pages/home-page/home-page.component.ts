@@ -7,8 +7,9 @@ import { EventPipe } from '../../pipes/event.pipe';
 import { EditService } from '../../services/Edit.service';
 import { Router } from '@angular/router';
 
-
-
+/**
+ * home page displays calendar with upcoming events and their details
+ */
 @Component({
   selector: 'app-home-page',
   standalone: true,
@@ -33,9 +34,8 @@ export class HomePageComponent {
   
   today=new Date(this.currentYear, this.currentMonth,new Date().getDate(),1);
 
-
   ngOnInit(){
-    this.today.setHours(1)
+    this.eventService.updateEvents()
     this.generateCalendar()
     
     var todayPair
@@ -204,15 +204,29 @@ export class HomePageComponent {
   // Convert hash to a valid HSL color
   const hue = Math.abs(hash) % 360; // 0-360 (hue)
   return `hsl(${hue}, 60%, 70%)`; // 70% saturation, 60% lightness for a vibrant color
-}
+  }
 
-dayBeforeBreak(week: KeyValue<Date, EventDetailModel[] | undefined>[],index:number,event:EventDetailModel):boolean{
-   
-  var dayBefore:any
-  if(index != 0) dayBefore = week[index-1]
-  else if(this.calendar.indexOf(week) == 0) return true
-  else dayBefore = this.calendar[this.calendar.indexOf(week)-1][6]
+  dayBeforeBreak(week: KeyValue<Date, EventDetailModel[] | undefined>[],index:number,event:EventDetailModel):boolean{
 
-  return dayBefore.value!.includes(event) && !dayBefore.value!.slice(0,3).includes(event);
-}
+    var dayBefore:any
+    if(index != 0) dayBefore = week[index-1]
+    else if(this.calendar.indexOf(week) == 0) return true
+    else dayBefore = this.calendar[this.calendar.indexOf(week)-1][6]
+
+    return dayBefore.value!.includes(event) && !dayBefore.value!.slice(0,3).includes(event);
+  }
+
+  getEventPrice(perPerson:boolean){
+    var priceOfDishes = 0;
+    this.viewEventDetail!.dishes.forEach(dish => {
+      priceOfDishes+=dish.price
+      console.log(dish.price)
+    });
+    return priceOfDishes * (perPerson ? 1 : this.viewEventDetail!.participants.length);
+  }
+
+  personDetail(id:string){
+    this.editService.openPersonEditModal(id,this.router.url)
+    this.router.navigate(['people'])
+  }
 }

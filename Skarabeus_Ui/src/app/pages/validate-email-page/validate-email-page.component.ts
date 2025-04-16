@@ -3,6 +3,9 @@ import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TokenModel } from '../../models/auth.interface';
 
+/**
+ * this page validates users email using token provided in route
+ */
 @Component({
   selector: 'app-validateEmail-page',
   standalone:true,

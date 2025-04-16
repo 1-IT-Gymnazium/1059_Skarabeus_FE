@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+/**
+ * this is base error page where wrong links are redirected
+ */
 @Component({
   selector: 'app-not-found',
   imports: [RouterLink],

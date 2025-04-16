@@ -8,7 +8,14 @@ import { DishService } from '../../services/dish.service';
 import { EditService } from '../../services/Edit.service';
 import { Router } from '@angular/router';
 import { PersonPipe } from '../../pipes/person.pipe';
+import { map } from 'rxjs';
 
+
+/**
+ * This component shows list of all created events, colormarking them if they have aleready ended 
+ * 
+ * other then that it contains modals for creating and modifying the events. Inside of which dishes and persons can be added to them
+ */
 @Component({
   selector: 'app-event-list',
   standalone: true,
@@ -28,6 +35,9 @@ export class EventListComponent {
   searchPersons=""
   searchDishes=""
 
+  onlyUpcoming = true;
+  upcomingFilter = (event: EventDetailModel) => (new Date(event.end).getTime() >= new Date().getTime());
+
   events$ = this.eventService.events$
   persons$ = this.personService.persons$
   dishes$ = this.dishService.dishes$
@@ -41,15 +51,16 @@ export class EventListComponent {
   editTab = 1;
 
   constructor() {
-
+    this.refresh()
   }
+
   ngOnInit(){
     this.editService.EditEventId$.subscribe(x=>{if(x!=null)this.openEditModalLogic(x)})
     if(this.editService.openEventCreate) this.openCreateModal();
   }
 
   refresh(){
-    this.eventService.updateEvents()
+    this.eventService.updateEvents(this.onlyUpcoming ? this.upcomingFilter : undefined)
   }
 
   refreshPersons(){
@@ -69,7 +80,6 @@ export class EventListComponent {
   ended(eventEndDate:string){
     var eventEnd = new Date(eventEndDate);
     var today = new Date();
-    today.setHours(0,0,0,0)
     return eventEnd <= today
   }
 
@@ -207,5 +217,28 @@ removeDishFromEvent(dishId:string){
 EditingEventContainsDish(dishId:string){
   var dish = this.editingEvent$.dishes.find(x => x.id == dishId)
   return dish
+}
+
+getEventPricePerPerson(event?:EventDetailModel){
+  var priceOfDishes = 0;
+    if(event != undefined){
+      event!.dishes.forEach(dish => {
+        priceOfDishes+=dish.price
+    });
+  }
+  else{
+    this.editingEvent$.dishes.forEach(dish => {
+      priceOfDishes+=dish.price
+    });
+  }
+  return priceOfDishes;
+}
+
+filterEvents(){
+  console.log("xx")
+  this.events$ = this.events$.pipe(map(x=>{
+    x.filter(y=>new Date(y.start).getTime() > new Date().getTime())
+    return x;
+  }))
 }
 }
