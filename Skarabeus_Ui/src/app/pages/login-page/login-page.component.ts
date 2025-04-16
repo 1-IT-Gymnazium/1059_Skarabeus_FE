@@ -5,6 +5,9 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
 
+/**
+ * one of the only accesable pages without loggin, used for logging in.
+ */
 @Component({
   selector: 'app-login-page',
   standalone: true,

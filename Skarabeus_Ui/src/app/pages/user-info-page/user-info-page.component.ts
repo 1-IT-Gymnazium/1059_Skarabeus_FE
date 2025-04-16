@@ -6,6 +6,9 @@ import { EditService } from '../../services/Edit.service';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 
+/**
+ * this page shows info about logged in user
+ */
 @Component({
   selector: 'app-user-info-page',
   standalone:true,

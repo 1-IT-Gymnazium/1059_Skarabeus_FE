@@ -4,6 +4,10 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import 'flowbite';
  
+
+/**
+ * This layout adds navbar and is used for most of the pages
+ */
 @Component({
   selector: 'app-default',
   standalone: true,

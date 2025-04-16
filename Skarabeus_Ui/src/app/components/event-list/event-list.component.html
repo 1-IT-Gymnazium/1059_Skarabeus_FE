@@ -1,14 +1,16 @@
 <div class="p-8 h_100-4 space-y-2">
   <h1 class="header">Events</h1>
-  <div class="flex flex-wrap items-center">
+  <div class="flex flex-wrap items-center space-x-2">
     <input placeholder="search" type="text" [(ngModel)]="search"
       class="w-64 p-2 border rounded" />
     @if(search!=""){
-    <button (click)="search = ''" class="ml-2 rounded-md">x</button>
+    <button (click)="search = ''" class="rounded-md">x</button>
     }
     <button (click)="openCreateModal()" class="w-10 h-10 ml-2 bg-[var(--action-green)] hover:bg-[var(--accent-green)] rounded-md">
       <b>+</b>
     </button>
+    <h2 class="text-lg text-center">Only upcoming</h2>
+    <input class="rounded-md ml-2" type="checkbox" [(ngModel)]="onlyUpcoming" (change)="refresh()"/>
   </div>
 
   <div class="flex flex-wrap flex-1 overflow-y-scroll justify-between" style="height: calc(100% - 4rem);">
@@ -17,7 +19,21 @@
     @if (normalizeString(event.name).indexOf(normalizeString(search)) != -1) {
     <section (click)="openEditModal(event.id)" [class]="{'bg-[var(--sandstone-beige)]' : ended(event.end)}" class="bg-[var(--light-parchment)] event">
       <h2 class="text-center">{{ event.name }}</h2>
-      <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ event.description }}</p>
+      <div >
+        <h2 class="font-semibold">Place: </h2>
+        <h2>{{event.place}}</h2>
+      </div><div >
+        <h2 class="font-semibold">Person responsible: </h2>
+        <h2>{{(event.responsiblePerson! | person:"fullName")}}</h2>
+      </div>
+      <div >
+        <h2 class="font-semibold">Number of Participants: </h2>
+        <h2>{{(event.participants.length)}}</h2>
+      </div>
+      <div >
+        <h2 class="font-semibold">Price per person:</h2>
+        <h2>{{getEventPricePerPerson(event)}},-</h2>
+      </div>
     </section>
     }
     }
@@ -112,20 +128,20 @@
 
   @if (activeEditModal) {
   <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-10">
-    <div class="w-4/5 p-6 bg-white rounded-lg shadow-lg h-4/5 flex flex-row">
-      <div class="flex flex-col pr-4 ">
-        <div class="flex flex-row mb-5">
-          <h2 class="w-5/12 text-lg font-semibold text-center text-gray-700">Editing Event</h2>
-          <div class="mx-10 flex-1">
+    <div class="w-4/5 p-6 bg-white rounded-lg shadow-lg h-4/5 flex">
+      <div class="flex flex-col w-full">
+        <div class="flex flex-row mb-2">
+          <h2 class="w-7/12 text-lg font-semibold text-center text-gray-700">Editing Event</h2>
+          <div class="mx-8 flex-1">
             <button 
-            class="text-lg font-semibold text-center text-gray-700 p-1 rounded-t-md" 
-            [class]="editTab==1 ? 'bg-[var(--light-parchment)] bg-opacity-30':''" 
+            class="text-lg font-semibold text-center hover:bg-[var(--accent-green)] p-1 rounded-t-md" 
+            [class]="editTab==1 ? 'bg-[var(--action-green)]':''" 
             (click)="editTab = 1">
               Participants
             </button>
             <button 
-            class="text-lg font-semibold text-center text-gray-700 p-1 rounded-t-md" 
-            [class]="editTab==2 ? 'bg-[var(--light-parchment)] bg-opacity-30':''" 
+            class="text-lg font-semibold text-center hover:bg-[var(--accent-green)]  p-1 rounded-t-md" 
+            [class]="editTab==2 ? 'bg-[var(--action-green)]':''" 
             (click)="editTab = 2">
               Foods
             </button>
@@ -133,8 +149,8 @@
           <button class="h-fit" (click)="closeEditModal()">x</button>
         </div>
         <div class="h_100-4 flex">
-        <form #eventForm="ngForm" class="editing_inputs flex flex-wrap w-5/12">
-          <div class="edit_input w-full">
+        <form #eventForm="ngForm" class="editing_inputs flex flex-wrap w-7/12">
+          <div class="flex flex-col w-full">
             <label>Event Name</label>
             <div class="flex w-full">
               <input type="text" class="rounded flex-1" name="name" [(ngModel)]="editingEvent$.name" #name="ngModel"
@@ -145,62 +161,68 @@
             <p class="text-red-500">Name is required (min. 3 characters).</p>
             }
           </div>
-
-          <div class="edit_input w-full">
-            <label>Description</label>
-            <textarea class="rounded" name="description" [(ngModel)]="editingEvent$.description" #description="ngModel"
-              required (blur)="onBlur('description', description.valid!)"></textarea>
-            @if(description.invalid && description.touched){
-            <p class="text-red-500">Description is required.</p>
-            }
-          </div>
-
-          <div class="edit_input w-full md:w-1/2">
-            <label>Place</label>
-            <input type="text" class="rounded w-full" name="place" [(ngModel)]="editingEvent$.place" #place="ngModel"
-              required minlength="3" (blur)="onBlur('place', place.valid!)">
-            @if(place.invalid && place.touched){
-            <p class="text-red-500">Place is required (min. 3 characters).</p>
-            }
-          </div>
-
-          <div class="edit_input w-full md:w-1/2">
-            <label>Responsible Person</label>
-            <select class="rounded w-full" name="responsiblePersonId" [(ngModel)]="editingEvent$.responsiblePerson!.id"
-              #responsiblePersonId="ngModel" required>
-              <option value="" selected>None</option>
-              @for(person of persons$ | async; track person){
-              <option [value]="person.id">{{ person.firstName }} {{ person.lastName }}</option>
+          <div class="w-full flex flex-row h_100-2.5 space-x-2">
+            <div class="flex flex-col h-full w-3/5">
+              <label>Description</label>
+              <textarea class="rounded h_100-1 " name="description" [(ngModel)]="editingEvent$.description" #description="ngModel"
+                required (blur)="onBlur('description', description.valid!)"></textarea>
+              @if(description.invalid && description.touched){
+              <p class="text-red-500">Description is required.</p>
               }
-            </select>
-            @if(responsiblePersonId.invalid && responsiblePersonId.touched){
-            <p class="text-red-500">Responsible person is required.</p>
-            }
-          </div>
-
-          <div class="edit_input w-full md:w-1/2 pr-1">
-            <label>Start Date</label>
-            <input type="date" class="rounded w-full" name="start" [(ngModel)]="editingEvent$.start" #start="ngModel"
-              required (blur)="onBlur('start', start.valid!)">
-            @if(start.invalid && start.touched){
-            <p class="text-red-500">Start date is required.</p>
-            }
-          </div>
-
-          <div class="edit_input w-full md:w-1/2 pl-1">
-            <label>End Date</label>
-            <input type="date" class="rounded w-full" name="end" [(ngModel)]="editingEvent$.end" #end="ngModel" required
-              (blur)="onBlur('end', end.valid!)">
-            @if(end.invalid && end.touched){
-            <p class="text-red-500">End date is required.</p>
-            }
+            </div>
+            <div class="flex flex-col w-2/5">
+                <div class="flex flex-col w-full">
+                  <label>Place</label>
+                  <input type="text" class="rounded w-full" name="place" [(ngModel)]="editingEvent$.place" #place="ngModel"
+                    required minlength="3" (blur)="onBlur('place', place.valid!)">
+                  @if(place.invalid && place.touched){
+                  <p class="text-red-500">Place is required (min. 3 characters).</p>
+                  }
+                </div>
+              
+                <div class="flex flex-col w-full">
+                  <label>Responsible Person</label>
+                  <select class="rounded w-full" name="responsiblePersonId" [(ngModel)]="editingEvent$.responsiblePerson!.id"
+                    #responsiblePersonId="ngModel" required>
+                    <option value="" selected>None</option>
+                    @for(person of persons$ | async; track person){
+                    <option [value]="person.id">{{ person.firstName }} {{ person.lastName }}</option>
+                    }
+                  </select>
+                  @if(responsiblePersonId.invalid && responsiblePersonId.touched){
+                  <p class="text-red-500">Responsible person is required.</p>
+                  }
+                </div>
+            
+                <div class="flex flex-col w-full">
+                  <label>Start Date</label>
+                  <input type="date" class="rounded w-full" name="start" [(ngModel)]="editingEvent$.start" #start="ngModel"
+                    required (blur)="onBlur('start', start.valid!)">
+                  @if(start.invalid && start.touched){
+                  <p class="text-red-500">Start date is required.</p>
+                  }
+                </div>
+              
+                <div class="flex flex-col w-full">
+                  <label>End Date</label>
+                  <input type="date" class="rounded w-full" name="end" [(ngModel)]="editingEvent$.end" #end="ngModel" required
+                    (blur)="onBlur('end', end.valid!)">
+                  @if(end.invalid && end.touched){
+                  <p class="text-red-500">End date is required.</p>
+                  }
+                </div>
+                <div class="flex flex-col w-full">
+                  <label>Estimated price per person:</label>
+                  <p>{{getEventPricePerPerson()}},-</p>
+                </div>
+            </div>
           </div>
         </form>
-        <div class="flex-1 flex flex-col w-7/12 pl-4">
+        <div class="flex-1 flex flex-col w-5/12 pl-4">
           @switch(editTab){
             @default {
               <div class="h-full">
-                <div class="flex flex-wrap justify-center items-center px-10 pr-12 mb-2">
+                <div class="flex flex-wrap justify-center items-center px-4 pr-6 mb-2">
                   <input placeholder="search" type="text" [(ngModel)]="searchPersons" class="flex-1 border rounded" />
                   @if(searchPersons != ''){
                   <button (click)="searchPersons = ''" class="ml-2 rounded-md">x</button>
@@ -223,7 +245,7 @@
                     }
                     @if(editingEvent$.participants.length != 0)
                     {
-                      <div class="w-full border border-[var(--sandstone-beige)]"></div>
+                      <div class="mx-10 border border-[var(--sandstone-beige)]"></div>
                     }
                   @if (!((persons$ | async)?.length == 0)) {
                     @for (person of persons$ | async; track person.id) {
@@ -246,7 +268,7 @@
             }
             @case (2) {
               <div class="h-full">
-                <div class="flex flex-wrap justify-center px-10 pr-12 mb-2">
+                <div class="flex flex-wrap justify-center px-4 pr-6 mb-2">
                   <input placeholder="search" type="text" [(ngModel)]="searchDishes" class="flex-1 border rounded" />
                   @if(searchDishes != ''){
                   <button (click)="searchDishes = ''" class="ml-2 rounded-md">x</button>
@@ -269,7 +291,7 @@
                     
                     @if(editingEvent$.dishes.length != 0)
                     {
-                      <div class="w-full border border-[var(--sandstone-beige)]"></div>
+                      <div class="mx-10 border border-[var(--sandstone-beige)]"></div>
                     }
                   @if (!((dishes$ | async)?.length == 0)) {
                     @for (food of dishes$ | async; track food.id) {

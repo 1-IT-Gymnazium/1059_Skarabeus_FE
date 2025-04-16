@@ -11,13 +11,17 @@
     </button>
   </div>
 
-  <div class="flex flex-wrap overflow-y-scroll justify-between h-full" >
+  <div class="flex flex-wrap overflow-y-scroll content-start justify-between h-full" >
     @if (users$ | async; as users) {
     @for (user of users$ | async; track user) {
     @if (normalizeString(user.userName).indexOf(normalizeString(searchUsers)) != -1) {
     <section [class]="user.deleted?'bg-[var(--sandstone-beige)]':''" class="user bg-[var(--light-parchment)]" (click)="openEditModal(user.id)">
-      <h2 class="text-center">{{ user.id }}</h2>
-      <p class="overflow-scroll whitespace-pre-wrap text-wrap">{{ user.userName }}</p>
+      <div class="flex flex-row justify-between">
+        <h2 class="text-center">{{ user.userName }}</h2>
+        <h2 [class]="user.emailConfirmed?'text-[var(--action-green)]':'text-red-800'" class="text-center font-semibold">{{ user.emailConfirmed ? "confirmed":"not confirmed"}}</h2>
+      </div>
+      <h2 class="">Email: {{ user.email }}</h2>
+      <h2 class="">Role: {{ user.role ? user.role:"none"}}</h2>
     </section>
     }
     }
@@ -132,7 +136,7 @@
               <button class="p-2 bg-red-500 rounded-md" (click)="unDelete()">Undelete</button>
             }
             @else {
-              <button class="p-2 bg-orange-500 rounded-md" (click)="delete()">Delete</button>
+              <button class="p-2 bg-red-500 rounded-md" (click)="delete()">Delete</button>
             }
         </div>
       </div>

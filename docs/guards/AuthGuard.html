@@ -121,6 +121,13 @@
             </p>
 
 
+                <p class="comment">
+                <h3>Description</h3>
+                </p>
+                <p class="comment">
+                    <p>This guard protects pages from being accesed without autentication and redirects to login page</p>
+
+                </p>
 
 
 
@@ -164,7 +171,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/guards/auth.guard.ts:10</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/guards/auth.guard.ts:13</a></div>
                             </td>
                         </tr>
 
@@ -239,8 +246,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="17"
-                                    class="link-to-prism">src/app/guards/auth.guard.ts:17</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="20"
+                                    class="link-to-prism">src/app/guards/auth.guard.ts:20</a></div>
                         </td>
                     </tr>
 
@@ -309,6 +316,9 @@ import { Observable, of } from &#x27;rxjs&#x27;;
 import { map, catchError, switchMap, take } from &#x27;rxjs/operators&#x27;;
 import { AuthService } from &#x27;../services/auth.service&#x27;; // Adjust the import path if needed
 
+/**
+ * This guard protects pages from being accesed without autentication and redirects to login page
+ */
 @Injectable({
   providedIn: &#x27;root&#x27;,
 })

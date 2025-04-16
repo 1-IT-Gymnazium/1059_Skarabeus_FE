@@ -8,6 +8,11 @@ import { EditService } from '../../services/Edit.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
+/**
+ * This component shows list of all created person colormarking the soft-deleted-ones
+ * 
+ * other then that it contains modals for creating and modifying the users.
+ */
 @Component({
   selector: 'app-user-list',
   standalone:true,

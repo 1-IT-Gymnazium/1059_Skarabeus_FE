@@ -10,6 +10,11 @@ import { EditService } from '../../services/Edit.service';
 import { Router } from '@angular/router';
 
 
+/**
+ * This component shows list of all created dishes
+ * 
+ * other then that it contains modals for creating and modifying the dishes. Inside of which Ingredients can be created and modified
+ */
 @Component({
   selector: 'app-dish-list',
   standalone: true,
@@ -22,6 +27,8 @@ import { Router } from '@angular/router';
   templateUrl: './dish-list.component.html',
   styleUrl: './dish-list.component.scss'
 })
+
+
 export class DishListComponent {
     protected dishService=inject(DishService)
     protected ingredientService=inject(IngredientService)
@@ -42,7 +49,7 @@ export class DishListComponent {
 
   editingIngredients:string[]=[];
 
-  editingDish$:DishDetail ={id:"",name:"",description:"",ingredients:undefined};
+  editingDish$:DishDetail ={} as DishDetail;
 
   constructor() {
 
@@ -59,7 +66,7 @@ export class DishListComponent {
 
   closeEditModal(){
     this.refresh()
-    this.editingDish$ = {id:"",name:"",description:"",ingredients:undefined};
+    this.editingDish$ = {} as DishDetail;
     this.editingIngredients = []
     this.activeModal=false;
     this.editService.closeDishEdit()

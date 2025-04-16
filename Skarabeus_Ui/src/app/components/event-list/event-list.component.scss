@@ -30,21 +30,13 @@
   @apply justify-between content-between 
 }
 
-.edit_input {
-  @apply flex flex-col flex-1 py-1
-}
-
-.edit_input>* {
-  @apply w-full
-}
-
 .select-item-wraper{
   @apply flex w-full flex-col space-y-5 flex-wrap overflow-scroll
 }
 
 .select-item {
-  @apply border p-2 shadow mx-10 min-h-12 h-12 flex flex-row rounded-lg;
-  width: calc(100% - 5rem);
+  @apply border p-2 shadow mx-4 min-h-12 h-12 flex flex-row rounded-lg;
+  width: calc(100% - 2rem);
 }
 
 .select-item button {
